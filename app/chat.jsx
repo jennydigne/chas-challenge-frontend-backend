@@ -15,7 +15,8 @@ export default function Chat() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
 
-  const uniqueId = () => `${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
+  const uniqueId = () =>
+    `${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
 
   const sendMessage = async () => {
     if (!input.trim()) return;
@@ -26,7 +27,7 @@ export default function Chat() {
       sender: "user",
     };
 
-    setMessages(prev => [userMessage, ...prev]);
+    setMessages((prev) => [userMessage, ...prev]);
     setInput("");
     
     //obs ändra till rätt ip-adress nedan, ipconfig, Wireless LAN adapter Wi-Fi:
@@ -50,7 +51,7 @@ export default function Chat() {
         sender: "bot",
       };
 
-      setMessages(prev => [botMessage, ...prev]);
+      setMessages((prev) => [botMessage, ...prev]);
     } catch (error) {
       console.error("API error:", error);
     }
@@ -67,7 +68,11 @@ export default function Chat() {
           data={messages}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <View style={item.sender === "user" ? styles.userBubble : styles.botBubble}>
+            <View
+              style={
+                item.sender === "user" ? styles.userBubble : styles.botBubble
+              }
+            >
               <Text style={styles.messageText}>{item.text}</Text>
             </View>
           )}
