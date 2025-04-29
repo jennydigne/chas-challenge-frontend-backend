@@ -19,19 +19,17 @@ export default function HomeScreen() {
       <View>
         <Image source={require('../assets/images/LogoText.png')} style={{ width: 195, height: 50.9 }} />
       </View>
-      {/* <Link href="/chat">Chat</Link>
-      <Link href="/login">Log in</Link> */}
       <View
         style={{
           gap: 50
         }}>
         <MyButton title="Sign in"
           onPress={() => router.push('/login')} />
-        <MyButton title="Sign up" />
+        <MyButton title="Sign up"
+          onPress={() => router.push('/signup')} />
       </View>
     </View>
   );
 }
 
 
-// Ska ändra till rätt typsnitt och logo, animerad bakgrund osv
