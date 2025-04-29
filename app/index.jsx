@@ -1,5 +1,6 @@
-import { Text, View } from "react-native";
+import { Text, View, Image } from "react-native";
 import { Link } from "expo-router";
+import MyButton from "../.expo/components/Button";
 
 export default function HomeScreen() {
   return (
@@ -8,16 +9,25 @@ export default function HomeScreen() {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        gap: 10
+        gap: 60,
+        backgroundColor: "#fed9b7"
       }}
     >
-      <Text style={{
-        fontSize: 32,
-        fontWeight: 'bold'
-      }}>Welcome to Neu! 
-      </Text>
-      <Link href="/chat">Chat</Link>
-      <Link href="/login">Log in</Link>
+      <View>
+        <Image source={require('../assets/images/LogoText.png')} style={{ width: 195, height: 50.9 }} />
+      </View>
+      {/* <Link href="/chat">Chat</Link>
+      <Link href="/login">Log in</Link> */}
+      <View
+      style={{
+        gap: 50
+      }}>
+        <MyButton title="Sign in" />
+        <MyButton title="Sign up" />
+      </View>
     </View>
   );
 }
+
+
+// Ska ändra till rätt typsnitt och logo, animerad bakgrund osv
