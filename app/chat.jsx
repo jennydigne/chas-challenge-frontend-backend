@@ -29,9 +29,11 @@ export default function Chat() {
 
     setMessages((prev) => [userMessage, ...prev]);
     setInput("");
-
+    
+    //obs ändra till rätt ip-adress nedan, ipconfig, Wireless LAN adapter Wi-Fi:
+    //IPv4 Address, sen skanna qr-kod igen
     try {
-      const response = await fetch("http://192.168.0.19:11434/api/generate", {
+      const response = await fetch("http://192.168.0.216:11434/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

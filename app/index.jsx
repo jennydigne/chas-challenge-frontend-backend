@@ -17,6 +17,7 @@ export default function HomeScreen() {
       }}>Welcome to Neu! 
       </Text>
       <Link href="/chat">Chat</Link>
+      <Link href="/login">Log in</Link>
     </View>
   );
 }
