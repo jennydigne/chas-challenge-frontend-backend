@@ -1,8 +1,11 @@
 import { Text, View, Image } from "react-native";
 import { Link } from "expo-router";
 import MyButton from "../.expo/components/Button";
+import { useRouter } from "expo-router";
 
 export default function HomeScreen() {
+  const router = useRouter();
+
   return (
     <View
       style={{
@@ -19,10 +22,11 @@ export default function HomeScreen() {
       {/* <Link href="/chat">Chat</Link>
       <Link href="/login">Log in</Link> */}
       <View
-      style={{
-        gap: 50
-      }}>
-        <MyButton title="Sign in" />
+        style={{
+          gap: 50
+        }}>
+        <MyButton title="Sign in"
+          onPress={() => router.push('/login')} />
         <MyButton title="Sign up" />
       </View>
     </View>
