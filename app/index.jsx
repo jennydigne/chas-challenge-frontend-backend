@@ -25,7 +25,7 @@ export default function HomeScreen() {
 
         <View style={{ gap: 5 }}>
           <MyButton title="Sign in" onPress={() => router.push("/login")} />
-          <Divider />
+          <Divider text="or" paddingHorizontal={60} />
           <MyButton title="Sign up" onPress={() => router.push("/signup")} />
         </View>
       </View>
