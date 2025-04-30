@@ -17,6 +17,7 @@ export default function SignUp() {
                 <ScrollView contentContainerStyle={styles.container}>
                     <Text style={styles.title}>Sign up</Text>
                     <View style={styles.form}>
+                        <Text style={styles.label}>Email</Text>
                         <TextInput
                             style={styles.input}
                             placeholder="E-mail"
@@ -24,12 +25,14 @@ export default function SignUp() {
                             onChangeText={setEmail}
                             keyboardType="email-address"
                             autoCapitalize="none" />
+                        <Text style={styles.label}>Password</Text>
                         <TextInput
                             style={styles.input}
                             placeholder="Password"
                             value={password}
                             onChangeText={setPassword}
                             secureTextEntry />
+                        <Text style={styles.label}>Confirm password</Text>
                         <TextInput
                             style={styles.input}
                             placeholder="Confirm password"
@@ -63,6 +66,12 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         padding: 12,
         marginBottom: 16,
+    },
+    label: {
+        fontSize: 16,
+        fontWeight: "600",
+        marginBottom: 8,
+        color: "#333",
     },
     form: {
         width: '100%',
