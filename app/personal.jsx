@@ -1,79 +1,52 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
-import { getAuth } from 'firebase/auth';
-import { getFirestore, doc, getDoc, updateDoc } from 'firebase/firestore';
-import app from '../firebaseConfig';
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 
-export default function PersonalScreen() {
+export default function Personal() {
+  const navigation = useNavigation();
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
 
-  const auth = getAuth(app);
-  const firestore = getFirestore(app);
-  const user = auth.currentUser;
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      if (user) {
-        try {
-          const userDoc = doc(firestore, 'users', user.uid);
-          const docSnap = await getDoc(userDoc);
-
-          if (docSnap.exists()) {
-            const data = docSnap.data();
-            setName(data.name || '');
-            setUsername(data.username || '');
-          } else {
-            Alert.alert('Data fetch failed', 'No user data found.');
-          }
-        } catch (error) {
-          Alert.alert('Error fetching data', error.message);
-        }
-      }
-      setIsLoading(false);
-    };
-
-    fetchUserData();
-  }, [user]);
-
-  const handleUpdate = async () => {
-    if (user) {
-      try {
-        const userDoc = doc(firestore, 'users', user.uid);
-        await updateDoc(userDoc, {
-          name,
-          username,
-        });
-        Alert.alert('Update successful', 'Your personal information has been updated.');
-      } catch (error) {
-        Alert.alert('Update failed', error.message);
-      }
-    }
+  const handleContinue = () => {
+    // Vi kan lägga till validering här innan du navigerar vidare
+    navigation.navigate('NextStep'); // Byt ut 'NextStep' mot din nästa skärm
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Personal Data</Text>
-      {isLoading ? (
-        <Text>Loading...</Text>
-      ) : (
-        <>
-          <TextInput
-            style={styles.input}
-            placeholder="Name"
-            value={name}
-            onChangeText={setName}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Username"
-            value={username}
-            onChangeText={setUsername}
-          />
-          <Button title="Continue" onPress={handleUpdate} />
-        </>
-      )}
+      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+        <Ionicons name="chevron-back" size={24} color="black" />
+      </TouchableOpacity>
+
+      <View style={styles.progressBarContainer}>
+        <View style={styles.progressBarActive} />
+        <View style={styles.progressBarInactive} />
+      </View>
+
+      <Text style={styles.title}>Personal data</Text>
+
+      <Text style={styles.label}>Name</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="John Doe"
+        placeholderTextColor={'#aaa'}
+        value={name}
+        onChangeText={setName}
+      />
+
+      <Text style={styles.label}>Username</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="your_username"
+        placeholderTextColor={'#aaa'}
+        value={username}
+        onChangeText={setUsername}
+      />
+
+      <TouchableOpacity style={styles.button} onPress={handleContinue}>
+        <Text style={styles.buttonText}>Continue</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -81,19 +54,54 @@ export default function PersonalScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    justifyContent: 'center',
+    paddingTop: 60,
+    paddingHorizontal: 20,
+    backgroundColor: '#fff',
+  },
+  backButton: {
+    marginBottom: 10,
+  },
+  progressBarContainer: {
+    flexDirection: 'row',
+    height: 4,
+    marginBottom: 30,
+  },
+  progressBarActive: {
+    flex: 1,
+    backgroundColor: 'black',
+  },
+  progressBarInactive: {
+    flex: 1,
+    backgroundColor: '#ccc',
   },
   title: {
     fontSize: 24,
-    marginBottom: 24,
-    textAlign: 'center',
+    fontWeight: 'bold',
+    marginBottom: 30,
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: '600',
+    marginBottom: 6,
   },
   input: {
     borderWidth: 1,
     borderColor: '#ccc',
-    padding: 12,
     borderRadius: 8,
-    marginBottom: 16,
+    padding: 12,
+    marginBottom: 20,
+    fontSize: 16,
+  },
+  button: {
+    backgroundColor: '#444',
+    padding: 16,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: '600',
+    fontSize: 16,
   },
 });

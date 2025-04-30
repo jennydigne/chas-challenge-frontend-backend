@@ -1,112 +1,122 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
-import { getAuth } from 'firebase/auth';
-import app from '../firebaseConfig';
-import { router, useRouter } from 'expo-router';
+import React, { useState, useRef } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { useRouter } from 'expo-router';
 
 export default function VerifyScreen() {
-  const [email, setEmail] = useState('');
-  const [code, setCode] = useState('');
-  const [codeSent, setCodeSent] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [code, setCode] = useState(Array(6).fill(''));
+  const inputs = useRef([]);
   const router = useRouter();
 
-  const auth = getAuth(app);
-
-  const sendVerificationEmail = async () => {
-    setIsLoading(true);
-    try {
-      // Replace with your function to send email
-      // await backendService.sendVerificationCode(email);
-
-      setCodeSent(true);
-      Alert.alert('Verification Email Sent', `Check your email inbox, we have sent you the code at ${email}`);
-    } catch (error) {
-      Alert.alert('Error', error.message);
+  const handleChange = (text, index) => {
+    if (text.length > 1) return;
+    const newCode = [...code];
+    newCode[index] = text;
+    setCode(newCode);
+    if (text && index < 5) {
+      inputs.current[index + 1].focus();
     }
-    setIsLoading(false);
   };
 
-  const handleVerify = async () => {
-    setIsLoading(true);
-    try {
-      // Replace with actual code verification logic
-      if (code === '123456') {  // Example placeholder
-        Alert.alert('Verification successful!');
-        router.replace('/chat'); // Navigate to the chat screen or dashboard
-      } else {
-        Alert.alert('Verification failed', 'Invalid code.');
-      }
-    } catch (error) {
-      Alert.alert('Verification failed', error.message);
-    }
-    setIsLoading(false);
+  const resendCode = () => {
+    console.log('Code resent');
+    
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Verify Your Account</Text>
+      <View style={styles.progressBarContainer}>
+        <View style={styles.progressBarActive} />
+        <View style={styles.progressBarInactive} />
+      </View>
 
-      {!codeSent ? (
-        <>
+      <Text style={styles.title}>Verify account</Text>
+      <Text style={styles.subtitle}>
+        Check your email inbox, we have sent you the code at <Text style={{ fontWeight: 'bold' }}>xxx@example.com</Text>
+      </Text>
+
+      <View style={styles.codeContainer}>
+        {code.map((digit, index) => (
           <TextInput
-            style={styles.input}
-            placeholder="E-mail"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-          />
-          <Button
-            title={isLoading ? "Sending..." : "Send Verification Code"}
-            onPress={sendVerificationEmail}
-            disabled={isLoading || !email.trim()}
-          />
-        </>
-      ) : (
-        <>
-          <Text>Check your email inbox, we have sent you the code at {email}</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter Verification Code"
-            value={code}
-            onChangeText={setCode}
+            key={index}
+            ref={(ref) => (inputs.current[index] = ref)}
+            value={digit}
+            onChangeText={(text) => handleChange(text, index)}
             keyboardType="numeric"
+            maxLength={1}
+            style={styles.codeInput}
           />
-          <Button
-            title={isLoading ? "Verifying..." : "Verify"}
-            onPress={handleVerify}
-            disabled={isLoading || !code.trim()}
-          />
-          <Button
-            title="Didn't receive the code? Resend"
-            onPress={sendVerificationEmail}
-            disabled={isLoading}
-          />
-        </>
-      )}
+        ))}
+      </View>
+
+      <View style={styles.resendContainer}>
+        <TouchableOpacity onPress={resendCode}>
+          <Text style={styles.resendText}>Resend Code</Text>
+        </TouchableOpacity>
+        <Text style={styles.grayText}>Didn’t not received the code?</Text>
+      </View>
     </View>
   );
 }
 
-
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    justifyContent: 'center',
+    backgroundColor: '#fff',
+    paddingHorizontal: 24,
+    paddingTop: 60,
+  },
+  progressBarContainer: {
+    flexDirection: 'row',
+    height: 4,
+    marginBottom: 40,
+    marginHorizontal: 16,
+  },
+  progressBarActive: {
+    flex: 1,
+    backgroundColor: 'black',
+    borderRadius: 2,
+  },
+  progressBarInactive: {
+    flex: 1,
+    backgroundColor: '#E0E0E0',
+    borderRadius: 2,
+    marginLeft: 4,
   },
   title: {
     fontSize: 24,
-    marginBottom: 24,
-    textAlign: 'center',
+    fontWeight: 'bold',
+    marginBottom: 8,
+    color: '#000',
   },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 16,
+  subtitle: {
+    fontSize: 16,
+    color: '#000',
+    marginBottom: 32,
+  },
+  codeContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 32,
+  },
+  codeInput: {
+    borderBottomWidth: 2,
+    borderColor: '#333',
+    width: 40,
+    textAlign: 'center',
+    fontSize: 18,
+    color: '#000',
+    paddingVertical: 8,
+  },
+  resendContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  resendText: {
+    fontWeight: 'bold',
+    color: '#000',
+  },
+  grayText: {
+    color: '#666',
+    fontSize: 13,
   },
 });
