@@ -2,6 +2,7 @@ import { useState } from "react";
 import { View, Text, TextInput, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, TouchableWithoutFeedback, Keyboard } from "react-native";
 import MyButton from "../.expo/components/Button";
 import { useRouter } from "expo-router";
+import Divider from "../.expo/components/Divider";
 
 export default function SignUp() {
     const router = useRouter();
@@ -41,6 +42,7 @@ export default function SignUp() {
                             secureTextEntry />
                         <MyButton title="Create account" />
                     </View>
+                    <Divider text="or sign up with" lineColor="#939393"/>
                 </ScrollView>
             </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
