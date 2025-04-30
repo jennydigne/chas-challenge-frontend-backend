@@ -6,6 +6,8 @@ import { router } from "expo-router";
 import { getBackgroundColorAsync } from "expo-system-ui";
 import { Image } from "react-native";
 
+import { TouchableOpacity } from "react-native";
+
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -23,7 +25,8 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Log in</Text>
+      <Text style={styles.title}>Sign in</Text>
+      <Text style={{ padding: 5 }}> Email </Text>
       <TextInput
         style={[styles.input, { backgroundColor: "white" }]}
         placeholder="E-mail"
@@ -32,6 +35,7 @@ export default function LoginScreen() {
         keyboardType="email-address"
         autoCapitalize="none"
       />
+      <Text style={{ padding: 5 }}> Password </Text>
       <TextInput
         style={[styles.input, { backgroundColor: "white" }]}
         placeholder="Password"
@@ -39,12 +43,22 @@ export default function LoginScreen() {
         onChangeText={setPassword}
         secureTextEntry
       />
-      <Button title="Log in" onPress={handleLogin} />
+
+      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+        <Text style={styles.loginButtonText}>Sign in</Text>
+      </TouchableOpacity>
+      <View style={styles.separatorContainer}>
+        <View style={styles.line} />
+        <Text style={styles.separatorText}>Or sign in with</Text>
+        <View style={styles.line} />
+      </View>
+
       <View
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
           padding: 20,
+          marginHorizontal: 60,
         }}
       >
         <Image
@@ -61,8 +75,8 @@ export default function LoginScreen() {
         />
       </View>
       <View style={{ padding: 20 }}>
-        <Text style={{ textAlign: "right" }}>
-          Don`t have an account? Sign upp{" "}
+        <Text style={{ textAlign: "center" }}>
+          Don`t have an account ? Sign up{" "}
         </Text>
       </View>
     </View>
@@ -86,5 +100,34 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 8,
     marginBottom: 16,
+    backgroundColor: "white",
+  },
+  loginButton: {
+    backgroundColor: "#333333",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 15,
+    alignItems: "center",
+    marginTop: 10,
+    marginHorizontal: 20,
+  },
+  loginButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  separatorContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 20,
+  },
+  line: {
+    flex: 1,
+    height: 1,
+    backgroundColor: "#ccc",
+  },
+  separatorText: {
+    marginHorizontal: 10,
+    color: "#666",
   },
 });
