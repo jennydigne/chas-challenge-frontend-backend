@@ -22,7 +22,6 @@ export default function HomeScreen() {
           source={require("../assets/images/LogoText.png")}
           style={{ width: 195, height: 50.9 }}
         />
-
         <View style={{ gap: 5 }}>
           <MyButton title="Sign in" onPress={() => router.push("/login")} />
           <Divider text="or" paddingHorizontal={60} />
@@ -37,6 +36,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     position: "relative",
+    paddingHorizontal: 20,
   },
   content: {
     flex: 1,
