@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, Text, TextInput, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, TouchableWithoutFeedback, Keyboard, Image } from "react-native";
+import { View, Text, TextInput, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, TouchableWithoutFeedback, Keyboard, Image, Pressable } from "react-native";
 import MyButton from "../.expo/components/Button";
 import { useRouter } from "expo-router";
 import Divider from "../.expo/components/Divider";
@@ -48,7 +48,12 @@ export default function SignUp() {
                         <Image source={require("../assets/images/facebook-icon.png")} style={styles.socialIcon} />
                         <Image source={require("../assets/images/apple-icon.png")} style={styles.socialIcon} />
                     </View>
-                    <Text style={{ textAlign: "center" }}>Already have an account? <Text style={{ fontWeight: "bold" }}>sign in</Text></Text>
+                    <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                        <Text>Already have an account? </Text>
+                        <Pressable onPress={() => router.push("/login")}>
+                            <Text style={{ fontWeight: 'bold' }}>sign in</Text>
+                        </Pressable>
+                    </View>
                 </ScrollView>
             </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
