@@ -10,7 +10,7 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <Video
-        source={require('../assets/videos/gradient-start.mp4')}
+        source={require("../assets/videos/gradient-start.mp4")}
         style={StyleSheet.absoluteFill}
         resizeMode="cover"
         isLooping
