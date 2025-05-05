@@ -1,8 +1,25 @@
-import { useState } from "react";
-import { View, Text, TextInput, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, TouchableWithoutFeedback, Keyboard, Image, Pressable } from "react-native";
-import MyButton from "../.expo/components/Button";
+import { useState, useEffect } from "react";
+import {
+    View,
+    Text,
+    TextInput,
+    StyleSheet,
+    KeyboardAvoidingView,
+    Platform,
+    ScrollView,
+    TouchableWithoutFeedback,
+    Keyboard,
+    Image,
+    Pressable,
+    Alert,
+} from "react-native";
+import MyButton from "./components/Button";
 import { useRouter } from "expo-router";
-import Divider from "../.expo/components/Divider";
+import Divider from "./components/Divider";
+import { createUserWithEmailAndPassword, signInWithCredential, GoogleAuthProvider } from 'firebase/auth';
+import { auth } from '../firebaseConfig';
+import * as Google from 'expo-auth-session/providers/google';
+import { makeRedirectUri } from 'expo-auth-session';
 
 export default function SignUp() {
     const router = useRouter();
@@ -10,12 +27,67 @@ export default function SignUp() {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
+    const [request, response, promptAsync] = Google.useAuthRequest({
+        clientId: '877049946369-fbljhrce4c2e48hg632tboi1mgrani2i.apps.googleusercontent.com',
+        redirectUri: makeRedirectUri({ useProxy: true })
+    });
+
+    useEffect(() => {
+        const signInWithGoogle = async () => {
+            if (response?.type === 'success') {
+                const { id_token } = response.params;
+                const credential = GoogleAuthProvider.credential(id_token);
+                try {
+                    const userCredential = await signInWithCredential(auth, credential);
+                    Alert.alert("Google account created!");
+                    router.push('/');
+                } catch (error) {
+                    console.error("Google Sign-In error: ", error);
+                    Alert.alert("Google Sign-In failed");
+                }
+            }
+        };
+        signInWithGoogle();
+    }, [response]);
+
+    const handleSignUp = async () => {
+        const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
+
+        if (!passwordRegex.test(password)) {
+            alert("Password must be at least 8 characters and include a number, an uppercase letter, and a special character.");
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            alert('Passwords do not match');
+            return;
+        }
+
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            alert("Account created!");
+            console.log(userCredential.user);
+            router.push('/');
+        } catch (error) {
+            console.error('Error signing up: ', error.message);
+            alert(error.message);
+        }
+    };
+
     return (
         <KeyboardAvoidingView
             style={{ flex: 1 }}
-            behavior={Platform.OS === "ios" ? "padding" : "height"}>
+            behavior={Platform.OS === "ios" ? "padding" : "height"} >
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <ScrollView contentContainerStyle={styles.container}>
+                    <Pressable onPress={() => router.push("/")}>
+                        <Image source={require("../assets/images/chevron-left.png")}
+                            style={{
+                                marginBottom: 40,
+                                width: 24,
+                                height: 24,
+                            }} />
+                    </Pressable>
                     <Text style={styles.title}>Sign up</Text>
                     <View style={styles.form}>
                         <Text style={styles.label}>Email</Text>
@@ -40,11 +112,13 @@ export default function SignUp() {
                             value={confirmPassword}
                             onChangeText={setConfirmPassword}
                             secureTextEntry />
-                        <MyButton title="Create account" onPress={() => router.push("/")} />
+                        <MyButton title="Create account" onPress={handleSignUp} />
                     </View>
-                    <Divider text="or sign up with" lineColor="#939393" paddingHorizontal={30} />
+                    <Divider text="or sign up with" lineColor="#939393" paddingHorizontal={30} marginTop={20} />
                     <View style={styles.iconRow}>
-                        <Image source={require("../assets/images/google-icon.png")} style={styles.socialIcon} />
+                        <Pressable onPress={() => promptAsync()}>
+                            <Image source={require("../assets/images/google-icon.png")} style={styles.socialIcon} />
+                        </Pressable>
                         <Image source={require("../assets/images/facebook-icon.png")} style={styles.socialIcon} />
                         <Image source={require("../assets/images/apple-icon.png")} style={styles.socialIcon} />
                     </View>
@@ -57,7 +131,7 @@ export default function SignUp() {
                 </ScrollView>
             </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
@@ -70,7 +144,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 28,
-        fontWeight: 400,
+        fontWeight: "400",
         marginBottom: 40,
     },
     input: {
@@ -81,7 +155,7 @@ const styles = StyleSheet.create({
         marginBottom: 25,
     },
     label: {
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: "600",
         marginBottom: 8,
         color: "#333",
@@ -103,3 +177,5 @@ const styles = StyleSheet.create({
         marginHorizontal: 5,
     },
 });
+
+

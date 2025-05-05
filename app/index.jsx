@@ -1,8 +1,8 @@
 import { View, Image, StyleSheet } from "react-native";
 import { Video } from "expo-av";
-import MyButton from "../.expo/components/Button";
+import MyButton from "./components/Button";
 import { useRouter } from "expo-router";
-import Divider from "../.expo/components/Divider";
+import Divider from "./components/Divider";
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -22,9 +22,10 @@ export default function HomeScreen() {
           source={require("../assets/images/LogoText.png")}
           style={{ width: 195, height: 50.9 }}
         />
+
         <View style={{ gap: 5 }}>
           <MyButton title="Sign in" onPress={() => router.push("/login")} />
-          <Divider text="or" paddingHorizontal={60} />
+          <Divider text="or" paddingHorizontal={60} marginBottom={10} marginTop={10} />
           <MyButton title="Sign up" onPress={() => router.push("/signup")} />
         </View>
       </View>
