@@ -1,11 +1,11 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';  // Ensure expo-router is correctly imported
 
 export default function VerifyScreen() {
   const [code, setCode] = useState(Array(6).fill(''));
   const inputs = useRef([]);
-  const router = useRouter();
+  const router = useRouter();  // Hook to access navigation
 
   const handleChange = (text, index) => {
     if (text.length > 1) return;
@@ -19,7 +19,18 @@ export default function VerifyScreen() {
 
   const resendCode = () => {
     console.log('Code resent');
-    
+    // Here, you might want to implement actual logic to resend the code
+  };
+
+  const handleSubmit = () => {
+    const codeString = code.join('');
+    if (codeString.length === 6) {
+      console.log('Code submitted:', codeString);
+      // Navigate to the next screen
+      router.push('/next-screen');  // Ensure the path is correct and matches the route in your app
+    } else {
+      alert('Please enter a 6-digit code');
+    }
   };
 
   return (
@@ -52,8 +63,12 @@ export default function VerifyScreen() {
         <TouchableOpacity onPress={resendCode}>
           <Text style={styles.resendText}>Resend Code</Text>
         </TouchableOpacity>
-        <Text style={styles.grayText}>Didn’t not received the code?</Text>
+        <Text style={styles.grayText}>Didn’t not receive the code?</Text>
       </View>
+
+      <TouchableOpacity onPress={handleSubmit}>
+        <Text style={styles.submitButton}>Submit</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -118,5 +133,12 @@ const styles = StyleSheet.create({
   grayText: {
     color: '#666',
     fontSize: 13,
+  },
+  submitButton: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'blue',
+    textAlign: 'center',
+    marginTop: 20,
   },
 });
