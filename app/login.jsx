@@ -79,7 +79,7 @@ export default function LoginScreen() {
           Don`t have an account ?{" "}
           <Text
             onPress={() => router.push("/signup")}
-            style={{ color: "bleu", fontWeight: "bold" }}
+            style={{ fontWeight: "bold" }}
           >
             {" "}
             Singn up
