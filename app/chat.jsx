@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
+  Image,
 } from "react-native";
 
 export default function Chat() {
@@ -29,11 +30,9 @@ export default function Chat() {
 
     setMessages((prev) => [userMessage, ...prev]);
     setInput("");
-    
-    //obs ändra till rätt ip-adress nedan, ipconfig, Wireless LAN adapter Wi-Fi:
-    //IPv4 Address, sen skanna qr-kod igen
+
     try {
-      const response = await fetch("http://192.168.0.216:11434/api/generate", {
+      const response = await fetch("http://192.168.0.19:11434/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -58,39 +57,60 @@ export default function Chat() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <KeyboardAvoidingView
-        style={styles.container}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0}
-      >
-        <FlatList
-          data={messages}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <View
-              style={
-                item.sender === "user" ? styles.userBubble : styles.botBubble
-              }
-            >
-              <Text style={styles.messageText}>{item.text}</Text>
-            </View>
-          )}
-          inverted
-          contentContainerStyle={{ paddingBottom: 10 }}
+    <View style={styles.container}>
+      {/* Avatar and Name Centered */}
+      <View style={styles.centered}>
+        <Image
+          source={require("../assets/images/Ai.png")}
+          style={styles.avatar}
         />
+        <Text style={styles.name}>
+          {"Hello I´m NEU, your personal AI,\n what can i do for you today?"}
+        </Text>
+      </View>
 
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            value={input}
-            onChangeText={setInput}
-            placeholder="Write a message"
-          />
-          <Button title="Send" onPress={sendMessage} />
-        </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+      {/* Horizontal Rule */}
+      <View style={styles.hr} />
+
+      {/* Chat Section */}
+      <SafeAreaView style={{ flex: 1 }}>
+        <KeyboardAvoidingView
+          style={styles.container}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0}
+        >
+          <View style={styles.chatContainer}>
+            <FlatList
+              data={messages}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <View
+                  style={
+                    item.sender === "user"
+                      ? styles.userBubble
+                      : styles.botBubble
+                  }
+                >
+                  <Text style={styles.messageText}>{item.text}</Text>
+                </View>
+              )}
+              inverted
+              contentContainerStyle={{ paddingBottom: 10 }}
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              value={input}
+              onChangeText={setInput}
+              placeholder="Write a message"
+            />
+            <Button title="Send" onPress={sendMessage} />
+          </View>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </View>
   );
 }
 
@@ -100,6 +120,33 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingHorizontal: 10,
     backgroundColor: "#fff",
+  },
+  centered: {
+    justifyContent: "flex-start",
+    alignItems: "center",
+    marginTop: 40,
+  },
+  avatar: {
+    width: 130,
+    height: 130,
+    borderRadius: 60,
+    marginBottom: 10,
+  },
+  name: {
+    fontSize: 18,
+    color: "black",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  hr: {
+    width: "100%",
+    height: 1,
+    backgroundColor: "#ccc",
+    marginTop: 20,
+  },
+  chatContainer: {
+    flex: 1, // This ensures that the chat messages take up available space
+    justifyContent: "flex-end", // Ensures messages are aligned at the bottom
   },
   inputContainer: {
     flexDirection: "row",

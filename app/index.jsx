@@ -1,23 +1,49 @@
-import { Text, View } from "react-native";
-import { Link } from "expo-router";
+import { View, Image, StyleSheet } from "react-native";
+import { Video } from "expo-av";
+import MyButton from "./components/Button";
+import { useRouter } from "expo-router";
+import Divider from "./components/Divider";
 
 export default function HomeScreen() {
+  const router = useRouter();
+
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        gap: 10
-      }}
-    >
-      <Text style={{
-        fontSize: 32,
-        fontWeight: 'bold'
-      }}>Welcome to Neu! 
-      </Text>
-      <Link href="/chat">Chat</Link>
-      <Link href="/login">Log in</Link>
+    <View style={styles.container}>
+      <Video
+        source={require('../assets/videos/gradient-start.mp4')}
+        style={StyleSheet.absoluteFill}
+        resizeMode="cover"
+        isLooping
+        shouldPlay
+        isMuted
+      />
+      <View style={styles.content}>
+        <Image
+          source={require("../assets/images/LogoText.png")}
+          style={{ width: 195, height: 50.9 }}
+        />
+
+        <View style={{ gap: 5 }}>
+          <MyButton title="Sign in" onPress={() => router.push("/login")} />
+          <Divider text="or" paddingHorizontal={60} marginBottom={10} marginTop={10} />
+          <MyButton title="Sign up" onPress={() => router.push("/signup")} />
+        </View>
+      </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    position: "relative",
+    paddingHorizontal: 20,
+  },
+  content: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 60,
+    paddingHorizontal: 20,
+  },
+});
