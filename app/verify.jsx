@@ -26,8 +26,7 @@ export default function VerifyScreen() {
     const codeString = code.join('');
     if (codeString.length === 6) {
       console.log('Code submitted:', codeString);
-      // Navigate to the next screen
-      router.push('/next-screen');  // Ensure the path is correct and matches the route in your app
+      router.push('/personal'); // Route to Personal screen
     } else {
       alert('Please enter a 6-digit code');
     }
