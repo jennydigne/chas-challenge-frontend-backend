@@ -8,6 +8,8 @@ import { Image } from "react-native";
 
 import { TouchableOpacity } from "react-native";
 
+
+
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -76,7 +78,14 @@ export default function LoginScreen() {
       </View>
       <View style={{ padding: 20 }}>
         <Text style={{ textAlign: "center" }}>
-          Don`t have an account ? Sign up{" "}
+          Don`t have an account ?{" "}
+          <Text
+            onPress={() => router.push("/signup")}
+            style={{ fontWeight: "bold" }}
+          >
+            {" "}
+            Singn up
+          </Text>
         </Text>
       </View>
     </View>
