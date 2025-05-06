@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useRouter } from 'expo-router';
+import { router, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function Personal() {
+  const router = useRouter();
   const navigation = useNavigation();
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
@@ -16,7 +17,7 @@ export default function Personal() {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+      <TouchableOpacity onPress={() => router.push('/verify')} style={styles.backButton}>
         <Ionicons name="chevron-back" size={24} color="black" />
       </TouchableOpacity>
 
