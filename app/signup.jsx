@@ -13,7 +13,7 @@ import {
     Pressable,
     Alert,
 } from "react-native";
-import MyButton from "./components/Button";
+import MyButton from "./components/Button"
 import { useRouter } from "expo-router";
 import Divider from "./components/Divider";
 import { createUserWithEmailAndPassword, signInWithCredential, GoogleAuthProvider } from 'firebase/auth';
@@ -67,7 +67,7 @@ export default function SignUp() {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             alert("Account created!");
             console.log(userCredential.user);
-            router.push('/');
+            router.push("/verify");
         } catch (error) {
             console.error('Error signing up: ', error.message);
             alert(error.message);
@@ -83,7 +83,7 @@ export default function SignUp() {
                     <Pressable onPress={() => router.push("/")}>
                         <Image source={require("../assets/images/chevron-left.png")}
                             style={{
-                                marginBottom: 40,
+                                marginBottom: 40, 
                                 width: 24,
                                 height: 24,
                             }} />
