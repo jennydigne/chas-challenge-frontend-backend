@@ -76,7 +76,14 @@ export default function LoginScreen() {
       </View>
       <View style={{ padding: 20 }}>
         <Text style={{ textAlign: "center" }}>
-          Don`t have an account ? Sign up{" "}
+          Don`t have an account ?{" "}
+          <Text
+            onPress={() => router.push("/signup")}
+            style={{ color: "bleu", fontWeight: "bold" }}
+          >
+            {" "}
+            Singn up
+          </Text>
         </Text>
       </View>
     </View>
