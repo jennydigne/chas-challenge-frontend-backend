@@ -1,5 +1,5 @@
-import { View, Image, StyleSheet } from "react-native";
-import { Video } from "expo-av";
+import { View, Image, StyleSheet, ImageBackground } from "react-native";
+import backgroundImage from '../assets/images/Violet_2.png';
 import MyButton from "./components/Button";
 import { useRouter } from "expo-router";
 import Divider from "./components/Divider";
@@ -8,15 +8,7 @@ export default function HomeScreen() {
   const router = useRouter();
 
   return (
-    <View style={styles.container}>
-      <Video
-        source={require("../assets/videos/gradient-start.mp4")}
-        style={StyleSheet.absoluteFill}
-        resizeMode="cover"
-        isLooping
-        shouldPlay
-        isMuted
-      />
+    <ImageBackground source={backgroundImage} style={styles.container} resizeMode="cover">
       <View style={styles.content}>
         <Image
           source={require("../assets/images/LogoText.png")}
@@ -39,7 +31,7 @@ export default function HomeScreen() {
           />
         </View>
       </View>
-    </View>
+    </ImageBackground>
   );
 }
 
@@ -57,3 +49,4 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
 });
+
