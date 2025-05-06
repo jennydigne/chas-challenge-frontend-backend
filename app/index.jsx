@@ -10,7 +10,7 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <Video
-        source={require('../assets/videos/gradient-start.mp4')}
+        source={require("../assets/videos/gradient-start.mp4")}
         style={StyleSheet.absoluteFill}
         resizeMode="cover"
         isLooping
@@ -25,8 +25,18 @@ export default function HomeScreen() {
 
         <View style={{ gap: 5 }}>
           <MyButton title="Sign in" onPress={() => router.push("/login")} />
-          <Divider text="or" paddingHorizontal={60} marginBottom={10} marginTop={10} />
+          <Divider
+            text="or"
+            paddingHorizontal={60}
+            marginBottom={10}
+            marginTop={10}
+          />
           <MyButton title="Sign up" onPress={() => router.push("/signup")} />
+          <MyButton title="chat" onPress={() => router.push("/chat")} />
+          <MyButton
+            title="getstarted"
+            onPress={() => router.push("/getstarted")}
+          />
         </View>
       </View>
     </View>

@@ -1,11 +1,14 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { useRouter } from 'expo-router';  // Ensure expo-router is correctly imported
+import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 export default function VerifyScreen() {
   const [code, setCode] = useState(Array(6).fill(''));
   const inputs = useRef([]);
-  const router = useRouter();  // Hook to access navigation
+  const router = useRouter();
+  const navigation = useNavigation(); // For back button
 
   const handleChange = (text, index) => {
     if (text.length > 1) return;
@@ -19,14 +22,14 @@ export default function VerifyScreen() {
 
   const resendCode = () => {
     console.log('Code resent');
-    // Here, you might want to implement actual logic to resend the code
+    // Add actual resend logic here
   };
 
   const handleSubmit = () => {
     const codeString = code.join('');
     if (codeString.length === 6) {
       console.log('Code submitted:', codeString);
-      router.push('/personal'); // Route to Personal screen
+      router.push('/personal'); // Go to Personal screen
     } else {
       alert('Please enter a 6-digit code');
     }
@@ -34,6 +37,12 @@ export default function VerifyScreen() {
 
   return (
     <View style={styles.container}>
+      {/* Back button */}
+      <TouchableOpacity onPress={() => router.push('/signup')} style={styles.backButton}>
+        <Ionicons name="chevron-back" size={24} color="black" />
+      </TouchableOpacity>
+
+      {/* Progress bar */}
       <View style={styles.progressBarContainer}>
         <View style={styles.progressBarActive} />
         <View style={styles.progressBarInactive} />
@@ -78,6 +87,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     paddingHorizontal: 24,
     paddingTop: 60,
+  },
+  backButton: {
+    marginBottom: 10,
   },
   progressBarContainer: {
     flexDirection: 'row',
