@@ -82,7 +82,7 @@ export default function SignUp() {
                             <Text style={styles.label}>Email</Text>
                             <TextInput
                                 style={styles.input}
-                                placeholder="E-mail"
+                                placeholder="Enter e-mail address"
                                 value={email}
                                 onChangeText={setEmail}
                                 keyboardType="email-address"
@@ -90,7 +90,7 @@ export default function SignUp() {
                             <Text style={styles.label}>Password</Text>
                             <TextInput
                                 style={styles.input}
-                                placeholder="Password"
+                                placeholder="Enter password"
                                 value={password}
                                 onChangeText={setPassword}
                                 secureTextEntry />
