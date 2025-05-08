@@ -1,42 +1,17 @@
-import { useState, useEffect } from "react";
-import { View, Text, TextInput, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, TouchableWithoutFeedback, Keyboard, Image, Pressable, Alert, ImageBackground } from "react-native";
+import { useState } from "react";
+import { View, Text, TextInput, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, TouchableWithoutFeedback, Keyboard, Image, Pressable, ImageBackground } from "react-native";
 import backgroundImage from '../assets/images/Violet.png';
 import MyButton from "./components/Button"
 import { useRouter } from "expo-router";
 import Divider from "./components/Divider";
-import { createUserWithEmailAndPassword, signInWithCredential, GoogleAuthProvider } from 'firebase/auth';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
-import * as Google from 'expo-auth-session/providers/google';
-import { makeRedirectUri } from 'expo-auth-session';
 
 export default function SignUp() {
     const router = useRouter();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-
-    const [request, response, promptAsync] = Google.useAuthRequest({
-        clientId: '877049946369-fbljhrce4c2e48hg632tboi1mgrani2i.apps.googleusercontent.com',
-        redirectUri: makeRedirectUri({ useProxy: true })
-    });
-
-    useEffect(() => {
-        const signInWithGoogle = async () => {
-            if (response?.type === 'success') {
-                const { id_token } = response.params;
-                const credential = GoogleAuthProvider.credential(id_token);
-                try {
-                    const userCredential = await signInWithCredential(auth, credential);
-                    Alert.alert("Google account created!");
-                    router.push('/');
-                } catch (error) {
-                    console.error("Google Sign-In error: ", error);
-                    Alert.alert("Google Sign-In failed");
-                }
-            }
-        };
-        signInWithGoogle();
-    }, [response]);
 
     const handleSignUp = async () => {
         const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
@@ -82,7 +57,7 @@ export default function SignUp() {
                             <Text style={styles.label}>Email</Text>
                             <TextInput
                                 style={styles.input}
-                                placeholder="Enter your e-mail address"
+                                placeholder="Enter e-mail address"
                                 value={email}
                                 onChangeText={setEmail}
                                 keyboardType="email-address"
@@ -105,9 +80,7 @@ export default function SignUp() {
                         </View>
                         <Divider text="or sign up with" lineColor="#939393" paddingHorizontal={30} marginTop={20} />
                         <View style={styles.iconRow}>
-                            <Pressable onPress={() => promptAsync()}>
-                                <Image source={require("../assets/images/google-icon.png")} style={styles.socialIcon} />
-                            </Pressable>
+                            <Image source={require("../assets/images/google-icon.png")} style={styles.socialIcon} />
                             <Image source={require("../assets/images/facebook-icon.png")} style={styles.socialIcon} />
                             <Image source={require("../assets/images/apple-icon.png")} style={styles.socialIcon} />
                         </View>
