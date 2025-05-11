@@ -23,7 +23,7 @@ export default function AvatarScreen() {
         </Text>
         {/* Buttons */}
         <View style={styles.buttonContainerLarge}>
-          <MyButton title="Get started" onPress={() => router.push({ pathname: "/chat", params: { onboarding: "true" } })} />
+          <MyButton title="Get started" onPress={() => router.push("/onboarding-chat")} />
         </View>
         <View style={styles.buttonContainerSmall}>
           <Pressable onPress={() => router.push("/profile")}>

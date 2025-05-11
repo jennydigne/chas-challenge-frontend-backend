@@ -10,7 +10,7 @@ import {
   Platform,
   SafeAreaView,
   Image,
-  ScrollView,
+  ImageBackground,
 } from "react-native";
 import { getAuth } from "firebase/auth";
 import { saveMessage } from "../saveMessage";
@@ -19,71 +19,40 @@ import {
   onSnapshot,
   query,
   orderBy,
-  addDoc,
-  serverTimestamp,
 } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import LogoutButton from "./components/LogoutButton";
-import { useRouter, useLocalSearchParams } from "expo-router";
-import MyButton from "./components/Button";
-import { ImageBackground } from "react-native";
+import { useRouter } from "expo-router";
 import backgroundImage from "../assets/images/Violet.png";
 
 export default function Chat() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
+  const [sessionId, setSessionId] = useState(`${Date.now()}`);
   const router = useRouter();
-  const { onboarding } = useLocalSearchParams();
-  const [isOnboarding, setIsOnboarding] = useState(onboarding === "true");
-  const [onboardingStep, setOnboardingStep] = useState(0);
-  const [hasStartedOnboarding, setHasStartedOnboarding] = useState(false);
 
   const auth = getAuth();
   const user = auth.currentUser;
 
-  const onboardingQuestions = [
-    "Question 1: What do you feel are your main challenges?",
-    "Question 2: What do you feel helps you the most?",
-    "Question 3: When would you like to receive reminder notifications?",
-  ];
-
   useEffect(() => {
     if (!user) return;
 
-    if (!isOnboarding) {
-      const messagesRef = collection(db, "users", user.uid, "messages");
-      const q = query(messagesRef, orderBy("timestamp", "desc"));
+    const messagesRef = collection(db, "users", user.uid, "messages");
+    const q = query(messagesRef, orderBy("timestamp", "desc"));
 
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        const loadedMessages = snapshot.docs.map((doc) => ({
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const loadedMessages = snapshot.docs
+        .map((doc) => ({
           id: doc.id,
           ...doc.data(),
-        }));
-        setMessages(loadedMessages);
-      });
+        }))
+        .filter((msg) => msg.sessionId === sessionId);
 
-      return () => unsubscribe();
-    }
-  }, [user, isOnboarding]);
+      setMessages(loadedMessages);
+    });
 
-  useEffect(() => {
-    if (isOnboarding && !hasStartedOnboarding) {
-      setHasStartedOnboarding(true);
-
-      const intro = {
-        id: `bot_${uniqueId()}`,
-        text:
-          "Hi! Glad you found your way here! 😊 I'd like to understand a bit more about you, please answer the following questions!",
-        sender: "bot",
-      };
-      const firstQuestion = {
-        id: `bot_${uniqueId()}`,
-        text: onboardingQuestions[0],
-        sender: "bot",
-      };
-      setMessages([firstQuestion, intro]);
-    }
-  }, [isOnboarding]);
+    return () => unsubscribe();
+  }, [user, sessionId]);
 
   if (!user) {
     return (
@@ -107,46 +76,13 @@ export default function Chat() {
       id: `user_${uniqueId()}`,
       text,
       sender: "user",
+      sessionId,
     };
 
     setMessages((prev) => [userMessage, ...prev]);
     setInput("");
 
-    if (isOnboarding) {
-      const onboardingRef = collection(db, "users", user.uid, "onboardingAnswers");
-      await addDoc(onboardingRef, {
-        question: onboardingQuestions[onboardingStep],
-        answer: text,
-        timestamp: serverTimestamp(),
-      });
-
-      if (onboardingStep < onboardingQuestions.length - 1) {
-        const nextQuestion = onboardingQuestions[onboardingStep + 1];
-        const botMessage = {
-          id: `bot_${uniqueId()}`,
-          text: nextQuestion,
-          sender: "bot",
-        };
-        setTimeout(() => {
-          setMessages((prev) => [botMessage, ...prev]);
-          setOnboardingStep((step) => step + 1);
-        }, 500);
-      } else {
-        setTimeout(() => {
-          const completeMessage = {
-            id: `bot_${uniqueId()}`,
-            text: "Thats all questions! Thank you for taking the time!😌",
-            sender: "bot",
-          };
-          setMessages((prev) => [completeMessage, ...prev]);
-          setIsOnboarding(false);
-        }, 500);
-      }
-
-      return;
-    }
-
-    await saveMessage(user.uid, text, "user");
+    await saveMessage(user.uid, text, "user", sessionId);
 
     try {
       const response = await fetch("http://192.168.0.216:11434/api/generate", {
@@ -165,10 +101,11 @@ export default function Chat() {
         id: `bot_${uniqueId()}`,
         text: data.response,
         sender: "bot",
+        sessionId,
       };
 
       setMessages((prev) => [botMessage, ...prev]);
-      await saveMessage(user.uid, data.response, "bot");
+      await saveMessage(user.uid, data.response, "bot", sessionId);
     } catch (error) {
       console.error("API error:", error);
     }
@@ -177,16 +114,18 @@ export default function Chat() {
   const startNewChat = () => {
     setMessages([]);
     setInput("");
+    setSessionId(`${Date.now()}`);
   };
 
   return (
-    <ImageBackground source={backgroundImage} style={{flex: 1}} resizeMode="cover">
+    <ImageBackground source={backgroundImage} style={{ flex: 1 }} resizeMode="cover">
       <View style={styles.container}>
-        {/* Header with avatar and welcome message */}
         <View style={styles.header}>
-          <View style={styles.logoutContainer}>
+          <View style={styles.buttonContainer}>
+             <Button title="Start new chat" onPress={startNewChat} />
             <LogoutButton />
           </View>
+           
           <View style={styles.centered}>
             <Image
               source={require("../assets/images/purple-ellipse.png")}
@@ -198,7 +137,7 @@ export default function Chat() {
           </View>
           <View style={styles.hr} />
         </View>
-        {/* Chat content below header */}
+
         <KeyboardAvoidingView
           style={styles.chatWrapper}
           behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -224,11 +163,6 @@ export default function Chat() {
                 contentContainerStyle={{ paddingBottom: 10 }}
               />
             </View>
-
-            {!isOnboarding && (
-              <Button title="Start a new chat" onPress={startNewChat} />
-            )}
-
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.input}
@@ -254,9 +188,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     zIndex: 1,
   },
-  logoutContainer: {
-    alignItems: "flex-end",
+  buttonContainer: {
     marginBottom: 10,
+    justifyContent: "space-between",
+    flexDirection: "row"
   },
   centered: {
     justifyContent: "flex-start",
@@ -282,7 +217,7 @@ const styles = StyleSheet.create({
   },
   chatWrapper: {
     flex: 1,
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
   },
   chatContainer: {
     flex: 1,
@@ -304,7 +239,8 @@ const styles = StyleSheet.create({
   userBubble: {
     alignSelf: "flex-end",
     backgroundColor: "#ECE9FB",
-    boxShadow: "0px -2px 4px 0px rgba(0, 0, 0, 0.10) inset, 0px 2px 4px 0px rgba(0, 0, 0, 0.10)",
+    boxShadow:
+      "0px -2px 4px 0px rgba(0, 0, 0, 0.10) inset, 0px 2px 4px 0px rgba(0, 0, 0, 0.10)",
     padding: 10,
     marginVertical: 4,
     borderRadius: 8,
@@ -313,7 +249,8 @@ const styles = StyleSheet.create({
   botBubble: {
     alignSelf: "flex-start",
     backgroundColor: "#FAFAFA",
-    boxShadow: "0px -2px 4px 0px rgba(0, 0, 0, 0.10) inset, 0px 2px 4px 0px rgba(0, 0, 0, 0.10)",
+    boxShadow:
+      "0px -2px 4px 0px rgba(0, 0, 0, 0.10) inset, 0px 2px 4px 0px rgba(0, 0, 0, 0.10)",
     padding: 10,
     marginVertical: 4,
     borderRadius: 8,
