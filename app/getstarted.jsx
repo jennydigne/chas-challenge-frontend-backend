@@ -1,74 +1,75 @@
 import React from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
-import { Link } from "expo-router";
+import { View, Text, Image, StyleSheet, Pressable, ImageBackground } from "react-native";
+import backgroundImage from '../assets/images/Violet.png';
+import MyButton from "./components/Button";
+import { useRouter } from "expo-router";
 
 export default function AvatarScreen() {
-  return (
-    <View style={styles.container}>
-      {/* Avatar */}
-      <Image
-        source={require("../assets/images/Ai.png")}
-        style={styles.avatar}
-      />
-      <Text style={styles.name}>I´m Neu, your personal AI</Text>
-      <Text style={styles.subtitle}>
-        {
-          "I’d like to get to know you better to\n assist you more effectively. Do you have\n time for a few questions?"
-        }
-      </Text>
+  const router = useRouter();
 
-      {/* Buttons */}
-      <View style={styles.buttonContainerLarge}>
-        <TouchableOpacity style={styles.buttonBlack} onPress={() => {}}>
-          <Text style={styles.whiteText}>Get started</Text>
-        </TouchableOpacity>
+  return (
+    <ImageBackground source={backgroundImage} style={{flex: 1}} resizeMode="cover">
+      <View style={styles.container}>
+        {/* Avatar */}
+        <Image
+          source={require("../assets/images/purple-ellipse.png")}
+          style={styles.avatar}
+        />
+        <Text style={styles.name}>I'm Neu, your personal AI</Text>
+        <Text style={styles.subtitle}>
+          {
+            "I'd like to get to know you better to assist you more effectively. Do you have time for a few questions?"
+          }
+        </Text>
+        {/* Buttons */}
+        <View style={styles.buttonContainerLarge}>
+          <MyButton title="Get started" onPress={() => router.push({ pathname: "/chat", params: { onboarding: "true" } })} />
+        </View>
+        <View style={styles.buttonContainerSmall}>
+          <Pressable onPress={() => router.push("/profile")}>
+            <Text style={{ fontWeight: 'bold' }}>Do it later</Text>
+          </Pressable>
+        </View>
       </View>
-      <View style={styles.buttonContainerSmall}>
-        <Link href="/chat">
-          <TouchableOpacity style={styles.buttonTransparent} onPress={() => {}}>
-            <Text style={styles.blackText}>Do it later</Text>
-          </TouchableOpacity>
-        </Link>
-      </View>
-    </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     justifyContent: "center",
-    alignItems: "center",
+    paddingHorizontal: 40,
+    paddingVertical: 38,
   },
 
   avatar: {
-    width: 150,
-    height: 150,
+    width: 100,
+    height: 100,
     borderRadius: 60,
     marginBottom: 10,
+    alignSelf: "center"
   },
 
   name: {
-    fontSize: 18,
+    fontSize: 20,
     color: "black",
     fontWeight: "bold",
   },
 
   subtitle: {
-    textAlign: "center",
-    marginHorizontal: 20,
     marginBottom: 20,
     color: "black",
+    marginRight: 40,
+    fontSize: 16
   },
 
   buttonContainerSmall: {
-    width: "80%",
     marginVertical: 5,
     alignItems: "flex-start",
   },
 
   buttonContainerLarge: {
-    width: "80%",
     marginVertical: 5,
   },
 
