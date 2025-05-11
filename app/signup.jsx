@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { View, Text, TextInput, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, TouchableWithoutFeedback, Keyboard, Image, Pressable, ImageBackground } from "react-native";
-import backgroundImage from '../assets/images/Violet.png';
+import backgroundImage from '../assets/images/Violet_2.png';
 import MyButton from "./components/Button"
 import { useRouter } from "expo-router";
 import Divider from "./components/Divider";
