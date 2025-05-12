@@ -6,6 +6,7 @@ import { useRouter } from "expo-router";
 import Divider from "./components/Divider";
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
+import { ChevronLeft } from "lucide-react-native";
 
 export default function SignUp() {
     const router = useRouter();
@@ -44,14 +45,12 @@ export default function SignUp() {
                 behavior={Platform.OS === "ios" ? "padding" : "height"} >
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                     <ScrollView>
-                        <Pressable onPress={() => router.push("/")}>
-                            <Image source={require("../assets/images/chevron-left.png")}
-                                style={{
-                                    marginBottom: 40,
-                                    width: 24,
-                                    height: 24,
-                                }} />
-                        </Pressable>
+                        <View style={styles.top}>
+                            <Pressable onPress={() => router.push("/")}>
+                                <ChevronLeft size={30} />
+                            </Pressable>
+                            <Image source={require("../assets/images/Progressbar.png")} />
+                        </View>
                         <Text style={styles.title}>Sign up</Text>
                         <View style={styles.form}>
                             <Text style={styles.label}>Email</Text>
@@ -138,6 +137,12 @@ const styles = StyleSheet.create({
         height: 46,
         marginHorizontal: 5,
     },
+    top: {
+        marginBottom: 40,
+        flexDirection: "row",
+        gap: 20, 
+        alignItems: "center"
+    }
 });
 
 

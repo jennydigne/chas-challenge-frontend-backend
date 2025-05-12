@@ -1,4 +1,4 @@
-import { View, Image, StyleSheet, ImageBackground } from "react-native";
+import { View, Image, StyleSheet, ImageBackground, Button } from "react-native";
 import backgroundImage from '../assets/images/Violet_2.png';
 import MyButton from "./components/Button";
 import { useRouter } from "expo-router";
@@ -24,8 +24,8 @@ export default function HomeScreen() {
             marginTop={10}
           />
           <MyButton title="Sign up" onPress={() => router.push("/signup")} />
-          <MyButton title="chat" onPress={() => router.push("/chat")} />
-          <MyButton title="getstarted" onPress={() => router.push("/getstarted")} />
+          <Button title="chat" onPress={() => router.push("/chat")} />
+          <Button title="getstarted" onPress={() => router.push("/getstarted")} />
         </View>
       </View>
     </ImageBackground>

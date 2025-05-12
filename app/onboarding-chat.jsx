@@ -127,7 +127,7 @@ export default function OnboardingChat() {
                             source={require("../assets/images/purple-ellipse.png")}
                             style={styles.avatar}
                         />
-                        <Text style={styles.name}>{"Hello! I'm NEU, your pesonal AI, what can i do for you today?"}</Text>
+                        <Text style={styles.name}>{"Hello I'm NEU, your personal AI,\nwhat can I do for you today?"}</Text>
                     </View>
                     <View style={styles.hr} />
                 </View>
@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#ECE9FB",
         boxShadow: "0px -2px 4px 0px rgba(0, 0, 0, 0.10) inset, 0px 2px 4px 0px rgba(0, 0, 0, 0.10)",
         padding: 10,
-        marginVertical: 4,
+        marginVertical: 10,
         borderRadius: 8,
         maxWidth: "80%",
     },
@@ -241,7 +241,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#FAFAFA",
         boxShadow: "0px -2px 4px 0px rgba(0, 0, 0, 0.10) inset, 0px 2px 4px 0px rgba(0, 0, 0, 0.10)",
         padding: 10,
-        marginVertical: 4,
+        marginVertical: 10,
         borderRadius: 8,
         maxWidth: "80%",
     },

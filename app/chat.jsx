@@ -85,7 +85,7 @@ export default function Chat() {
     await saveMessage(user.uid, text, "user", sessionId);
 
     try {
-      const response = await fetch("http://192.168.0.216:11434/api/generate", {
+      const response = await fetch("http://192.168.0.19:11434/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
     boxShadow:
       "0px -2px 4px 0px rgba(0, 0, 0, 0.10) inset, 0px 2px 4px 0px rgba(0, 0, 0, 0.10)",
     padding: 10,
-    marginVertical: 4,
+    marginVertical: 10,
     borderRadius: 8,
     maxWidth: "80%",
   },
@@ -252,7 +252,7 @@ const styles = StyleSheet.create({
     boxShadow:
       "0px -2px 4px 0px rgba(0, 0, 0, 0.10) inset, 0px 2px 4px 0px rgba(0, 0, 0, 0.10)",
     padding: 10,
-    marginVertical: 4,
+    marginVertical: 10,
     borderRadius: 8,
     maxWidth: "80%",
   },
