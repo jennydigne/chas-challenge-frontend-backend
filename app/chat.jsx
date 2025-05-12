@@ -11,6 +11,7 @@ import {
   SafeAreaView,
   Image,
   ImageBackground,
+  Pressable
 } from "react-native";
 import { getAuth } from "firebase/auth";
 import { saveMessage } from "../saveMessage";
@@ -24,6 +25,7 @@ import { db } from "../firebaseConfig";
 import LogoutButton from "./components/LogoutButton";
 import { useRouter } from "expo-router";
 import backgroundImage from "../assets/images/Violet.png";
+import { Send } from "lucide-react-native";
 
 export default function Chat() {
   const [messages, setMessages] = useState([]);
@@ -122,10 +124,10 @@ export default function Chat() {
       <View style={styles.container}>
         <View style={styles.header}>
           <View style={styles.buttonContainer}>
-             <Button title="Start new chat" onPress={startNewChat} />
+            <Button title="Start new chat" onPress={startNewChat} />
             <LogoutButton />
           </View>
-           
+
           <View style={styles.centered}>
             <Image
               source={require("../assets/images/purple-ellipse.png")}
@@ -170,7 +172,9 @@ export default function Chat() {
                 onChangeText={setInput}
                 placeholder="Write a message"
               />
-              <Button title="Send" onPress={sendMessage} />
+              <Pressable style={styles.send} onPress={sendMessage}>
+                <Send size={14} color="white" />
+              </Pressable>
             </View>
           </SafeAreaView>
         </KeyboardAvoidingView>
@@ -259,4 +263,10 @@ const styles = StyleSheet.create({
   messageText: {
     fontSize: 16,
   },
+  send: {
+    backgroundColor: "#AFA1EE",
+    padding: 5,
+    borderRadius: 50,
+    boxShadow: "0px -2px 4px 0px rgba(0, 0, 0, 0.10)"
+  }
 });
