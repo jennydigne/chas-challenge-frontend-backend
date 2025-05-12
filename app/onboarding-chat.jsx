@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import {
     View,
     TextInput,
-    Button,
     FlatList,
     Text,
     StyleSheet,
@@ -11,6 +10,8 @@ import {
     SafeAreaView,
     Image,
     ImageBackground,
+    Pressable,
+    TouchableOpacity,
 } from "react-native";
 import { getAuth } from "firebase/auth";
 import {
@@ -23,21 +24,36 @@ import LogoutButton from "./components/LogoutButton";
 import { useRouter } from "expo-router";
 import backgroundImage from "../assets/images/Violet.png";
 import MyButton from "./components/Button";
+import { Send } from "lucide-react-native";
 
 export default function OnboardingChat() {
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState("");
     const [onboardingStep, setOnboardingStep] = useState(0);
     const [showProfileButton, setShowProfileButton] = useState(false);
+    const [selectedOptions, setSelectedOptions] = useState([]);
 
     const auth = getAuth();
     const user = auth.currentUser;
     const router = useRouter();
 
     const onboardingQuestions = [
-        "Question 1: What do you feel are your main challenges?",
-        "Question 2: What do you feel helps you the most?",
-        "Question 3: When would you like to receive reminder notifications?",
+        {
+            question: "Question 1: What do you feel are your main challenges? \nYou can also add your own response or provide more details if you'd like!👐",
+            options: ["Anxiety", "Stress", "Structure", "Depression", "Panic attacks"],
+        },
+        {
+            question: "Question 2: What do you feel helps you the most?",
+            options: ["Help with planning", "Exercises", "Calming words", "Motivational words", "Help calming down"],
+        },
+        {
+            question: "Question 3: When would you like to receive reminder notifications? Please choose your preferred times",
+            options: ["8am-10am", "10am-12pm", "12pm-2pm", "2pm-4pm", "4pm-6pm", "6pm-8pm", "8pm-10pm"],
+        },
+        {
+            question: "Additionally, would you like to sync with your calendar?🗓️",
+            options: ["Sync", "No thanks"],
+        },
     ];
 
     const uniqueId = () =>
@@ -51,45 +67,60 @@ export default function OnboardingChat() {
                     "Hi! Glad you found your way here! 😊 I'd like to understand a bit more about you, please answer the following questions!",
                 sender: "bot",
             };
+
+            setMessages((prev) => [intro, ...prev]);
+
             const firstQuestion = {
                 id: `bot_q1`,
-                text: onboardingQuestions[0],
+                text: onboardingQuestions[0].question,
                 sender: "bot",
             };
-            setMessages([firstQuestion, intro]);
+            setMessages((prev) => [firstQuestion, ...prev]);
         }
     }, []);
 
+    const toggleOption = (option) => {
+        setSelectedOptions((prev) =>
+            prev.includes(option)
+                ? prev.filter((o) => o !== option)
+                : [...prev, option]
+        );
+    };
+
     const sendMessage = async () => {
-        if (!input.trim() || !user) return;
-        const text = input.trim();
+        const trimmed = input.trim();
+        if (!trimmed && selectedOptions.length === 0) return;
+
+        const combinedAnswers = [...selectedOptions, trimmed].filter(Boolean);
 
         const userMessage = {
             id: `user_${uniqueId()}`,
-            text,
+            text: combinedAnswers.join(", "),
             sender: "user",
         };
 
         setMessages((prev) => [userMessage, ...prev]);
         setInput("");
+        setSelectedOptions([]);
 
         const onboardingRef = collection(db, "users", user.uid, "onboardingAnswers");
         await addDoc(onboardingRef, {
-            question: onboardingQuestions[onboardingStep],
-            answer: text,
+            question: onboardingQuestions[onboardingStep].question,
+            answer: combinedAnswers,
             timestamp: serverTimestamp(),
         });
 
+
         if (onboardingStep < onboardingQuestions.length - 1) {
-            const nextQuestion = onboardingQuestions[onboardingStep + 1];
-            const botMessage = {
+            const nextStep = onboardingStep + 1;
+            const nextQuestion = {
                 id: `bot_${uniqueId()}`,
-                text: nextQuestion,
+                text: onboardingQuestions[nextStep].question,
                 sender: "bot",
             };
             setTimeout(() => {
-                setMessages((prev) => [botMessage, ...prev]);
-                setOnboardingStep((step) => step + 1);
+                setMessages((prev) => [nextQuestion, ...prev]);
+                setOnboardingStep(nextStep);
             }, 500);
         } else {
             const completeMessage = {
@@ -110,10 +141,12 @@ export default function OnboardingChat() {
                 <Text style={{ marginTop: 40, fontSize: 18, textAlign: "center" }}>
                     You need to be signed in to use the onboarding.
                 </Text>
-                <Button title="Sign in" onPress={() => router.push("/login")} />
+                <MyButton title="Sign in" onPress={() => router.push("/login")} />
             </View>
         );
     }
+
+    const currentOptions = onboardingQuestions[onboardingStep]?.options || [];
 
     return (
         <ImageBackground source={backgroundImage} style={{ flex: 1 }} resizeMode="cover">
@@ -153,19 +186,49 @@ export default function OnboardingChat() {
                         />
 
                         {!showProfileButton && (
-                            <View style={styles.inputContainer}>
-                                <TextInput
-                                    style={styles.input}
-                                    value={input}
-                                    onChangeText={setInput}
-                                    placeholder="Write your answer"
-                                />
-                                <Button title="Send" onPress={sendMessage} />
-                            </View>
+                            <>
+                                <View style={styles.optionContainer}>
+                                    {currentOptions.map((option) => {
+                                        const selected = selectedOptions.includes(option);
+                                        return (
+                                            <TouchableOpacity
+                                                key={option}
+                                                style={[
+                                                    styles.optionButton,
+                                                    selected && styles.optionButtonSelected,
+                                                ]}
+                                                onPress={() => toggleOption(option)}
+                                            >
+                                                <Text
+                                                    style={[
+                                                        styles.optionText,
+                                                        selected && styles.optionTextSelected,
+                                                    ]}
+                                                >
+                                                    {option}
+                                                </Text>
+                                            </TouchableOpacity>
+                                        );
+                                    })}
+                                </View>
+
+                                <View style={styles.inputContainer}>
+                                    <TextInput
+                                        style={styles.input}
+                                        value={input}
+                                        onChangeText={setInput}
+                                        placeholder="Write your answer"
+                                    />
+                                    <Pressable style={styles.send} onPress={sendMessage}>
+                                        <Send size={14} color="white" />
+                                    </Pressable>
+                                </View>
+                            </>
                         )}
+
                         {showProfileButton && (
-                            <View style={{marginVertical: 20, marginHorizontal: 80}}>
-                                <MyButton title="Go to profile" style={{ marginBottom: "40" }} onPress={() => router.push("/profile")} />
+                            <View style={{ marginVertical: 20, marginHorizontal: 80 }}>
+                                <MyButton title="Go to profile" onPress={() => router.push("/profile")} />
                             </View>
                         )}
                     </SafeAreaView>
@@ -248,4 +311,34 @@ const styles = StyleSheet.create({
     messageText: {
         fontSize: 16,
     },
+    send: {
+        backgroundColor: "#AFA1EE",
+        padding: 8,
+        borderRadius: 50,
+    },
+    optionContainer: {
+        flexDirection: "row",
+        flexWrap: "wrap",
+        marginBottom: 10,
+        gap: 6,
+    },
+    optionButton: {
+        borderWidth: 1,
+        borderColor: "#693ED6",
+        borderRadius: 10,
+        paddingVertical: 10,
+        paddingHorizontal: 12,
+        marginRight: 8,
+        marginBottom: 6,
+    },
+    optionButtonSelected: {
+        backgroundColor: "#693ED6",
+    },
+    optionText: {
+        color: "#333",
+    },
+    optionTextSelected: {
+        color: "#fff",
+    },
 });
+
