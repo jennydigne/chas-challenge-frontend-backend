@@ -1,5 +1,14 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  Alert,
+  ImageBackground,
+} from "react-native";
+import backgroundImage from "../assets/images/Violet.png";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import app from "../firebaseConfig";
 import { router } from "expo-router";
@@ -7,8 +16,7 @@ import { getBackgroundColorAsync } from "expo-system-ui";
 import { Image } from "react-native";
 
 import { TouchableOpacity } from "react-native";
-
-
+import MyButton from "./components/Button";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -26,69 +34,78 @@ export default function LoginScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Sign in</Text>
-      <Text style={{ padding: 5 }}> Email </Text>
-      <TextInput
-        style={[styles.input, { backgroundColor: "white" }]}
-        placeholder="E-mail"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
-      <Text style={{ padding: 5 }}> Password </Text>
-      <TextInput
-        style={[styles.input, { backgroundColor: "white" }]}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
+    <ImageBackground
+      source={backgroundImage}
+      style={{ flex: 1 }}
+      resizeMode="cover"
+    >
+      <View style={styles.container}>
+        <Text style={styles.title}>Sign in</Text>
+        <Text style={{ padding: 5 }}> Email </Text>
+        <TextInput
+          style={[styles.input, { backgroundColor: "white" }]}
+          placeholder="E-mail"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
+        <Text style={{ padding: 5 }}> Password </Text>
+        <TextInput
+          style={[styles.input, { backgroundColor: "white" }]}
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+        />
+        <MyButton title="sign in" onPress={handleLogin}>
+          {" "}
+        </MyButton>
 
-      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-        <Text style={styles.loginButtonText}>Sign in</Text>
-      </TouchableOpacity>
-      <View style={styles.separatorContainer}>
-        <View style={styles.line} />
-        <Text style={styles.separatorText}>Or sign in with</Text>
-        <View style={styles.line} />
-      </View>
+        {/* <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+          <Text style={styles.loginButtonText}>Sign in</Text>
+        </TouchableOpacity> */}
+        <View style={styles.separatorContainer}>
+          <View style={styles.line} />
+          <Text style={styles.separatorText}>Or sign in with</Text>
+          <View style={styles.line} />
+        </View>
 
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          padding: 20,
-          marginHorizontal: 60,
-        }}
-      >
-        <Image
-          source={require("../assets/images/google.jpg")}
-          style={{ width: 50, height: 50, borderRadius: 25 }}
-        />
-        <Image
-          source={require("../assets/images/Apple.png")}
-          style={{ width: 50, height: 50 }}
-        />
-        <Image
-          source={require("../assets/images/Facebook.png")}
-          style={{ width: 50, height: 50, borderRadius: 25 }}
-        />
-      </View>
-      <View style={{ padding: 20 }}>
-        <Text style={{ textAlign: "center" }}>
-          Don`t have an account ?{" "}
-          <Text
-            onPress={() => router.push("/signup")}
-            style={{ fontWeight: "bold" }}
-          >
-            {" "}
-            Singn up
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            padding: 20,
+            marginHorizontal: 60,
+          }}
+        >
+          <Image
+            source={require("../assets/images/google.jpg")}
+            style={{ width: 50, height: 50, borderRadius: 25 }}
+          />
+          <Image
+            source={require("../assets/images/Apple.png")}
+            style={{ width: 50, height: 50 }}
+          />
+          <Image
+            source={require("../assets/images/Facebook.png")}
+            style={{ width: 50, height: 50, borderRadius: 25 }}
+          />
+        </View>
+        <View style={{ padding: 20 }}>
+          <Text style={{ textAlign: "center" }}>
+            Don`t have an account ?{" "}
+            <Text
+              onPress={() => router.push("/signup")}
+              style={{ fontWeight: "bold" }}
+            >
+              {" "}
+              Singn up
+            </Text>
           </Text>
-        </Text>
+        </View>
       </View>
-    </View>
+    </ImageBackground>
   );
 }
 
