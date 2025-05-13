@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import {
     View,
     TextInput,
-    FlatList,
     Text,
     StyleSheet,
     KeyboardAvoidingView,
@@ -12,6 +11,7 @@ import {
     ImageBackground,
     Pressable,
     TouchableOpacity,
+    ScrollView
 } from "react-native";
 import { getAuth } from "firebase/auth";
 import {
@@ -150,90 +150,93 @@ export default function OnboardingChat() {
 
     return (
         <ImageBackground source={backgroundImage} style={{ flex: 1 }} resizeMode="cover">
-            <View style={styles.container}>
-                <View style={styles.header}>
-                    <View style={styles.logoutContainer}>
-                        <LogoutButton />
-                    </View>
-                    <View style={styles.centered}>
-                        <Image
-                            source={require("../assets/images/purple-ellipse.png")}
-                            style={styles.avatar}
-                        />
-                        <Text style={styles.name}>{"Hello I'm NEU, your personal AI,\nwhat can I do for you today?"}</Text>
-                    </View>
-                    <View style={styles.hr} />
-                </View>
-
+            <SafeAreaView style={{ flex: 1 }}>
                 <KeyboardAvoidingView
-                    style={styles.chatWrapper}
+                    style={{ flex: 1 }}
                     behavior={Platform.OS === "ios" ? "padding" : "height"}
                     keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0}
                 >
-                    <SafeAreaView style={{ flex: 1 }}>
-                        <FlatList
-                            data={messages}
-                            keyExtractor={(item) => item.id}
-                            renderItem={({ item }) => (
+                    <ScrollView
+                        contentContainerStyle={{ flexGrow: 1 }}
+                        keyboardShouldPersistTaps="handled"
+                    >
+                        <View style={styles.header}>
+                            <View style={styles.logoutContainer}>
+                                <LogoutButton />
+                            </View>
+                            <View style={styles.centered}>
+                                <Image
+                                    source={require("../assets/images/purple-ellipse.png")}
+                                    style={styles.avatar}
+                                />
+                                <Text style={styles.name}>
+                                    {"Hello I'm NEU, your personal AI,\nwhat can I do for you today?"}
+                                </Text>
+                            </View>
+                            <View style={styles.hr} />
+                        </View>
+
+                        <View style={styles.chatWrapper}>
+                            {[...messages].reverse().map((item) => (
                                 <View
+                                    key={item.id}
                                     style={item.sender === "user" ? styles.userBubble : styles.botBubble}
                                 >
                                     <Text style={styles.messageText}>{item.text}</Text>
                                 </View>
-                            )}
-                            inverted
-                            contentContainerStyle={{ paddingBottom: 10 }}
-                        />
+                            ))}
 
-                        {!showProfileButton && (
-                            <>
-                                <View style={styles.optionContainer}>
-                                    {currentOptions.map((option) => {
-                                        const selected = selectedOptions.includes(option);
-                                        return (
-                                            <TouchableOpacity
-                                                key={option}
-                                                style={[
-                                                    styles.optionButton,
-                                                    selected && styles.optionButtonSelected,
-                                                ]}
-                                                onPress={() => toggleOption(option)}
-                                            >
-                                                <Text
+                            {!showProfileButton && (
+                                <>
+                                    <View style={styles.optionContainer}>
+                                        {currentOptions.map((option) => {
+                                            const selected = selectedOptions.includes(option);
+                                            return (
+                                                <TouchableOpacity
+                                                    key={option}
                                                     style={[
-                                                        styles.optionText,
-                                                        selected && styles.optionTextSelected,
+                                                        styles.optionButton,
+                                                        selected && styles.optionButtonSelected,
                                                     ]}
+                                                    onPress={() => toggleOption(option)}
                                                 >
-                                                    {option}
-                                                </Text>
-                                            </TouchableOpacity>
-                                        );
-                                    })}
-                                </View>
+                                                    <Text
+                                                        style={[
+                                                            styles.optionText,
+                                                            selected && styles.optionTextSelected,
+                                                        ]}
+                                                    >
+                                                        {option}
+                                                    </Text>
+                                                </TouchableOpacity>
+                                            );
+                                        })}
+                                    </View>
 
-                                <View style={styles.inputContainer}>
-                                    <TextInput
-                                        style={styles.input}
-                                        value={input}
-                                        onChangeText={setInput}
-                                        placeholder="Write your answer"
-                                    />
-                                    <Pressable style={styles.send} onPress={sendMessage}>
-                                        <Send size={14} color="white" />
-                                    </Pressable>
-                                </View>
-                            </>
-                        )}
+                                    <View style={styles.inputContainer}>
+                                        <TextInput
+                                            style={styles.input}
+                                            value={input}
+                                            onChangeText={setInput}
+                                            placeholder="Write your answer"
+                                            multiline
+                                        />
+                                        <Pressable style={styles.send} onPress={sendMessage}>
+                                            <Send size={14} color="white" />
+                                        </Pressable>
+                                    </View>
+                                </>
+                            )}
 
-                        {showProfileButton && (
-                            <View style={{ marginVertical: 20, marginHorizontal: 80 }}>
-                                <MyButton title="Go to profile" onPress={() => router.push("/profile")} />
-                            </View>
-                        )}
-                    </SafeAreaView>
+                            {showProfileButton && (
+                                <View style={{ marginVertical: 20, marginHorizontal: 80 }}>
+                                    <MyButton title="Go to profile" onPress={() => router.push("/profile")} />
+                                </View>
+                            )}
+                        </View>
+                    </ScrollView>
                 </KeyboardAvoidingView>
-            </View>
+            </SafeAreaView>
         </ImageBackground>
     );
 }
