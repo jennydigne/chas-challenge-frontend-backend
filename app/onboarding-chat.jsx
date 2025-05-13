@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
     View,
     TextInput,
@@ -9,9 +9,9 @@ import {
     SafeAreaView,
     Image,
     ImageBackground,
-    Pressable,
     TouchableOpacity,
-    ScrollView
+    ScrollView,
+    Button
 } from "react-native";
 import { getAuth } from "firebase/auth";
 import {
@@ -24,7 +24,6 @@ import LogoutButton from "./components/LogoutButton";
 import { useRouter } from "expo-router";
 import backgroundImage from "../assets/images/Violet.png";
 import MyButton from "./components/Button";
-import { Send } from "lucide-react-native";
 
 export default function OnboardingChat() {
     const [messages, setMessages] = useState([]);
@@ -32,6 +31,8 @@ export default function OnboardingChat() {
     const [onboardingStep, setOnboardingStep] = useState(0);
     const [showProfileButton, setShowProfileButton] = useState(false);
     const [selectedOptions, setSelectedOptions] = useState([]);
+    const scrollViewRef = useRef(null);
+    const [isAtBottom, setIsAtBottom] = useState(true);
 
     const auth = getAuth();
     const user = auth.currentUser;
@@ -78,6 +79,12 @@ export default function OnboardingChat() {
             setMessages((prev) => [firstQuestion, ...prev]);
         }
     }, []);
+
+    useEffect(() => {
+        if (isAtBottom) {
+            scrollViewRef.current?.scrollToEnd({ animated: true });
+        }
+    }, [messages]);
 
     const toggleOption = (option) => {
         setSelectedOptions((prev) =>
@@ -157,8 +164,17 @@ export default function OnboardingChat() {
                     keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0}
                 >
                     <ScrollView
+                        ref={scrollViewRef}
                         contentContainerStyle={{ flexGrow: 1 }}
                         keyboardShouldPersistTaps="handled"
+                        onScroll={(e) => {
+                            const { contentOffset, layoutMeasurement, contentSize } = e.nativeEvent;
+                            const paddingToBottom = 20;
+                            const atBottom =
+                                contentOffset.y + layoutMeasurement.height >= contentSize.height - paddingToBottom;
+                            setIsAtBottom(atBottom);
+                        }}
+                        scrollEventThrottle={100}
                     >
                         <View style={styles.header}>
                             <View style={styles.logoutContainer}>
@@ -221,9 +237,7 @@ export default function OnboardingChat() {
                                             placeholder="Write your answer"
                                             multiline
                                         />
-                                        <Pressable style={styles.send} onPress={sendMessage}>
-                                            <Send size={14} color="white" />
-                                        </Pressable>
+                                        <Button title="Send" onPress={sendMessage} />
                                     </View>
                                 </>
                             )}
