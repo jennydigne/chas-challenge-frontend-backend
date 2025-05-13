@@ -6,7 +6,7 @@ import { useRouter } from "expo-router";
 import Divider from "./components/Divider";
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
-import { ChevronLeft } from "lucide-react-native";
+import Feather from '@expo/vector-icons/Feather';
 
 export default function SignUp() {
     const router = useRouter();
@@ -47,7 +47,7 @@ export default function SignUp() {
                     <ScrollView>
                         <View style={styles.top}>
                             <Pressable onPress={() => router.push("/")}>
-                                <ChevronLeft size={30} />
+                                <Feather name="chevron-left" size={30} color="black" />
                             </Pressable>
                             <Image source={require("../assets/images/Progressbar.png")} />
                         </View>
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
     top: {
         marginBottom: 40,
         flexDirection: "row",
-        gap: 20, 
+        gap: 20,
         alignItems: "center"
     }
 });
