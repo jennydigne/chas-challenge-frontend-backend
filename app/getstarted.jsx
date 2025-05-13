@@ -1,4 +1,3 @@
-import React from "react";
 import { View, Text, Image, StyleSheet, Pressable, ImageBackground } from "react-native";
 import backgroundImage from '../assets/images/Violet.png';
 import MyButton from "./components/Button";
@@ -8,9 +7,8 @@ export default function AvatarScreen() {
   const router = useRouter();
 
   return (
-    <ImageBackground source={backgroundImage} style={{flex: 1}} resizeMode="cover">
+    <ImageBackground source={backgroundImage} style={{ flex: 1 }} resizeMode="cover">
       <View style={styles.container}>
-        {/* Avatar */}
         <Image
           source={require("../assets/images/purple-ellipse.png")}
           style={styles.avatar}
@@ -21,7 +19,6 @@ export default function AvatarScreen() {
             "I'd like to get to know you better to assist you more effectively. Do you have time for a few questions?"
           }
         </Text>
-        {/* Buttons */}
         <View style={styles.buttonContainerLarge}>
           <MyButton title="Get started" onPress={() => router.push("/onboarding-chat")} />
         </View>
