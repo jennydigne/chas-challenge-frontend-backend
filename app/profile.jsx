@@ -1,12 +1,18 @@
 import { View, Text, StyleSheet, ImageBackground, Image, TouchableOpacity } from "react-native";
 import backgroundImage from '../assets/images/Violet.png';
 import { useRouter } from "expo-router";
+import Feather from '@expo/vector-icons/Feather';
+import Octicons from '@expo/vector-icons/Octicons';
 
 export default function Profile() {
   const router = useRouter();
   return (
     <ImageBackground source={backgroundImage} style={styles.container} resizeMode="cover">
       <View style={styles.header}>
+        <View style={styles.icons}>
+          <Feather name="edit" size={20} color="#191919" />
+          <Feather name="hexagon" size={24} color="black" />
+        </View>
         <Image
           source={require("../assets/images/purple-ellipse.png")}
           style={styles.avatar}
@@ -35,15 +41,19 @@ export default function Profile() {
 
       <View style={styles.nav}>
         <TouchableOpacity style={styles.navItem} onPress={() => router.push('/profile')}>
+          <Feather name="users" size={20} color="#2D2D2D" />
           <Text style={styles.navText}>Community</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navItem} onPress={() => router.push('/profile')}>
+          <Feather name="book-open" size={20} color="#2D2D2D" />
           <Text style={styles.navText}>Learn</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navItem} onPress={() => router.push('/chat')}>
+          <Feather name="message-circle" size={20} color="#2D2D2D" />
           <Text style={styles.navText}>Chat</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navItem} onPress={() => router.push('/profile')}>
+          <Octicons name="person-fill" size={20} color="#2D2D2D" />
           <Text style={styles.navText}>Profile</Text>
         </TouchableOpacity>
 
@@ -90,7 +100,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: "#fff",
     borderRadius: 10,
-    width: "48%", 
+    width: "48%",
     height: 120,
     boxShadow: "0px -2px 4px 0px #D6D0F6, 0px 4px 4px 0px #D6D0F6",
     justifyContent: "flex-end"
@@ -117,4 +127,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#191919",
   },
+  icons: {
+    position: "absolute",
+    top: 20,
+    left: 220,
+    flexDirection: "row",
+    gap: 8,
+    alignItems: "center"
+  }
 });
