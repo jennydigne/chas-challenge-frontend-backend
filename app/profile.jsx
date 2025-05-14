@@ -48,7 +48,7 @@ export default function Profile() {
           <Feather name="book-open" size={20} color="#2D2D2D" />
           <Text style={styles.navText}>Learn</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem} onPress={() => router.push('/chat')}>
+        <TouchableOpacity style={styles.navItem} onPress={() => router.push('/chat-options')}>
           <Feather name="message-circle" size={20} color="#2D2D2D" />
           <Text style={styles.navText}>Chat</Text>
         </TouchableOpacity>
