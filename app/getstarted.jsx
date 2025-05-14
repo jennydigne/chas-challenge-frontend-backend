@@ -7,24 +7,18 @@ export default function AvatarScreen() {
   const router = useRouter();
 
   return (
-    <ImageBackground source={backgroundImage} style={{ flex: 1 }} resizeMode="cover">
+    <ImageBackground source={backgroundImage} style={styles.background}>
       <View style={styles.container}>
         <Image
           source={require("../assets/images/purple-ellipse.png")}
           style={styles.avatar}
         />
         <Text style={styles.name}>I'm Neu, your personal AI</Text>
-        <Text style={styles.subtitle}>
-          {
-            "I'd like to get to know you better to assist you more effectively. Do you have time for a few questions?"
-          }
-        </Text>
-        <View style={styles.buttonContainerLarge}>
-          <MyButton title="Get started" onPress={() => router.push("/onboarding-chat")} />
-        </View>
-        <View style={styles.buttonContainerSmall}>
+        <Text style={styles.subtitle}>I'd like to get to know you better to assist you more effectively. Do you have time for a few questions?</Text>
+        <MyButton title="Get started" onPress={() => router.push("/onboarding-chat")} />
+        <View style={styles.link}>
           <Pressable onPress={() => router.push("/profile")}>
-            <Text style={{ fontWeight: 'bold' }}>Do it later</Text>
+            <Text style={styles.blackText}>Do it later</Text>
           </Pressable>
         </View>
       </View>
@@ -34,12 +28,14 @@ export default function AvatarScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
+    flex: 1,
     justifyContent: "center",
     paddingHorizontal: 40,
-    paddingVertical: 38,
   },
-
+  background: {
+    flex: 1,
+    resizeMode: "cover"
+  },
   avatar: {
     width: 100,
     height: 100,
@@ -47,50 +43,24 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     alignSelf: "center"
   },
-
   name: {
     fontSize: 20,
     color: "black",
     fontWeight: "bold",
+    marginBottom: 5
   },
-
   subtitle: {
     marginBottom: 20,
     color: "black",
     marginRight: 40,
     fontSize: 16
   },
-
-  buttonContainerSmall: {
-    marginVertical: 5,
-    alignItems: "flex-start",
+  link: {
+    marginTop: 5,
   },
-
-  buttonContainerLarge: {
-    marginVertical: 5,
-  },
-
-  buttonBlack: {
-    padding: 15,
-    borderRadius: 10,
-    backgroundColor: "black",
-    alignItems: "center",
-  },
-
-  buttonTransparent: {
-    backgroundColor: "transparent",
-    alignItems: "center",
-  },
-
-  whiteText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-
   blackText: {
     color: "black",
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "bold",
   },
 });

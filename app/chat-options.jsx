@@ -13,7 +13,7 @@ export default function ChatOptions() {
                     style={styles.avatar}
                 />
             </View>
-            <View style={{ gap: 25 }}>
+            <View style={styles.buttons}>
                 <MyButton title="Continue last chat" onPress={() => router.push("/chat-options")} />
                 <MyButton title="Start new chat" onPress={() => router.push("/chat-options")} />
             </View>
@@ -41,5 +41,8 @@ const styles = StyleSheet.create({
     container: {
         padding: 40,
         flex: 1
+    },
+    buttons: {
+        gap: 30
     }
 })
