@@ -75,6 +75,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
     justifyContent: "center",
     alignItems: "center",
+    width: "100%"
   },
   text: {
     fontSize: 28,
@@ -130,7 +131,7 @@ const styles = StyleSheet.create({
   icons: {
     position: "absolute",
     top: 20,
-    left: 220,
+    right: 20,
     flexDirection: "row",
     gap: 8,
     alignItems: "center"
