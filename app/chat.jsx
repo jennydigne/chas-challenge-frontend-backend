@@ -24,6 +24,7 @@ import { db } from "../firebaseConfig";
 import LogoutButton from "./components/LogoutButton";
 import { useRouter } from "expo-router";
 import backgroundImage from "../assets/images/Violet.png";
+import { defaultShadow } from "../styles/shadows";
 
 export default function Chat() {
   const [messages, setMessages] = useState([]);
@@ -170,7 +171,7 @@ export default function Chat() {
                 onChangeText={setInput}
                 placeholder="Write a message"
               />
-              <Button title="Send" onPress={sendMessage}/>
+              <Button title="Send" onPress={sendMessage} />
             </View>
           </SafeAreaView>
         </KeyboardAvoidingView>
@@ -239,8 +240,7 @@ const styles = StyleSheet.create({
   userBubble: {
     alignSelf: "flex-end",
     backgroundColor: "#ECE9FB",
-    boxShadow:
-      "0px -2px 4px 0px rgba(0, 0, 0, 0.10) inset, 0px 2px 4px 0px rgba(0, 0, 0, 0.10)",
+    ...defaultShadow,
     padding: 10,
     marginVertical: 10,
     borderRadius: 8,
@@ -249,8 +249,7 @@ const styles = StyleSheet.create({
   botBubble: {
     alignSelf: "flex-start",
     backgroundColor: "#FAFAFA",
-    boxShadow:
-      "0px -2px 4px 0px rgba(0, 0, 0, 0.10) inset, 0px 2px 4px 0px rgba(0, 0, 0, 0.10)",
+    ...defaultShadow,
     padding: 10,
     marginVertical: 10,
     borderRadius: 8,
@@ -263,6 +262,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#AFA1EE",
     padding: 8,
     borderRadius: 50,
-    boxShadow: "0px -2px 4px 0px rgba(0, 0, 0, 0.10)"
+    ...defaultShadow
   }
 });

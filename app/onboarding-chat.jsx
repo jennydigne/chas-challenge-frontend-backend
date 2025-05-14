@@ -299,7 +299,7 @@ const styles = StyleSheet.create({
     userBubble: {
         alignSelf: "flex-end",
         backgroundColor: "#ECE9FB",
-        boxShadow: "0px -2px 4px 0px rgba(0, 0, 0, 0.10) inset, 0px 2px 4px 0px rgba(0, 0, 0, 0.10)",
+        ...defaultShadow,
         padding: 10,
         marginVertical: 10,
         borderRadius: 8,
@@ -308,7 +308,7 @@ const styles = StyleSheet.create({
     botBubble: {
         alignSelf: "flex-start",
         backgroundColor: "#FAFAFA",
-        boxShadow: "0px -2px 4px 0px rgba(0, 0, 0, 0.10) inset, 0px 2px 4px 0px rgba(0, 0, 0, 0.10)",
+        defaultShadow,
         padding: 10,
         marginVertical: 20,
         borderRadius: 8,

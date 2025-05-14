@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: "48%",
     height: 120,
-    boxShadow: "0px -2px 4px 0px #D6D0F6, 0px 4px 4px 0px #D6D0F6",
+    ...defaultShadow,
     justifyContent: "flex-end"
   },
   cardText: {
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingVertical: 30,
     backgroundColor: "#FAFAFA",
-    boxShadow: "0px -2px 4px 0px rgba(0, 0, 0, 0.10)",
+    ...defaultShadow
   },
   navItem: {
     alignItems: "center",
