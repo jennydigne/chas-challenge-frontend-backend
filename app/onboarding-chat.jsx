@@ -1,29 +1,13 @@
 import { useState, useEffect, useRef } from "react";
-import {
-    View,
-    TextInput,
-    Text,
-    StyleSheet,
-    KeyboardAvoidingView,
-    Platform,
-    SafeAreaView,
-    Image,
-    ImageBackground,
-    TouchableOpacity,
-    ScrollView,
-    Button
-} from "react-native";
+import { View, TextInput, Text, StyleSheet, KeyboardAvoidingView, Platform, SafeAreaView, Image, ImageBackground, TouchableOpacity, ScrollView, Button } from "react-native";
 import { getAuth } from "firebase/auth";
-import {
-    collection,
-    addDoc,
-    serverTimestamp,
-} from "firebase/firestore";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import LogoutButton from "./components/LogoutButton";
 import { useRouter } from "expo-router";
 import backgroundImage from "../assets/images/Violet.png";
 import MyButton from "./components/Button";
+import { generateProfileFromAnswers } from "../generateUserProfile";
 
 export default function OnboardingChat() {
     const [messages, setMessages] = useState([]);
@@ -110,13 +94,26 @@ export default function OnboardingChat() {
         setInput("");
         setSelectedOptions([]);
 
-        const onboardingRef = collection(db, "users", user.uid, "onboardingAnswers");
+        const onboardingRef = collection(db, "profiles", user.uid, "onboardingAnswers");
         await addDoc(onboardingRef, {
             question: onboardingQuestions[onboardingStep].question,
             answer: combinedAnswers,
             timestamp: serverTimestamp(),
         });
 
+        if (onboardingStep === onboardingQuestions.length - 1) {
+            await generateProfileFromAnswers(user.uid);
+
+            const completeMessage = {
+                id: `bot_complete`,
+                text: "That's all questions! Thank you for taking the time! 😌",
+                sender: "bot",
+            };
+            setTimeout(() => {
+                setMessages((prev) => [completeMessage, ...prev]);
+                setShowProfileButton(true);
+            }, 500);
+        }
 
         if (onboardingStep < onboardingQuestions.length - 1) {
             const nextStep = onboardingStep + 1;
@@ -128,16 +125,6 @@ export default function OnboardingChat() {
             setTimeout(() => {
                 setMessages((prev) => [nextQuestion, ...prev]);
                 setOnboardingStep(nextStep);
-            }, 500);
-        } else {
-            const completeMessage = {
-                id: `bot_complete`,
-                text: "That's all questions! Thank you for taking the time! 😌",
-                sender: "bot",
-            };
-            setTimeout(() => {
-                setMessages((prev) => [completeMessage, ...prev]);
-                setShowProfileButton(true);
             }, 500);
         }
     };
