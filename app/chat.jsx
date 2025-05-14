@@ -58,7 +58,7 @@ export default function Chat() {
   if (!user) {
     return (
       <View style={styles.container}>
-        <Text style={{ marginTop: 40, fontSize: 18, textAlign: "center" }}>
+        <Text style={styles.loginText}>
           You need to be signed in to use the chat.
         </Text>
         <Button title="Sign in" onPress={() => router.push("/login")} />
@@ -119,7 +119,7 @@ export default function Chat() {
   };
 
   return (
-    <ImageBackground source={backgroundImage} style={{ flex: 1 }} resizeMode="cover">
+    <ImageBackground source={backgroundImage} style={styles.background}>
       <View style={styles.container}>
         <View style={styles.header}>
           <View style={styles.buttonContainer}>
@@ -144,7 +144,7 @@ export default function Chat() {
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0}
         >
-          <SafeAreaView style={{ flex: 1 }}>
+          <SafeAreaView style={styles.container}>
             <View style={styles.chatContainer}>
               <FlatList
                 data={messages}
@@ -161,7 +161,7 @@ export default function Chat() {
                   </View>
                 )}
                 inverted
-                contentContainerStyle={{ paddingBottom: 10 }}
+                contentContainerStyle={styles.flatListContent}
               />
             </View>
             <View style={styles.inputContainer}>
@@ -183,6 +183,10 @@ export default function Chat() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  background: {
+    flex: 1,
+    resizeMode: "cover"
   },
   header: {
     paddingTop: 10,
@@ -263,5 +267,13 @@ const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 50,
     ...defaultShadow
+  },
+  loginText: {
+    marginTop: 40,
+    fontSize: 18,
+    textAlign: "center"
+  },
+  flatListContent: {
+    paddingBottom: 10
   }
 });

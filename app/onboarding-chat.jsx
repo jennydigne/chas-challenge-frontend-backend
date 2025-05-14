@@ -152,7 +152,7 @@ export default function OnboardingChat() {
                 >
                     <ScrollView
                         ref={scrollViewRef}
-                        contentContainerStyle={{ flexGrow: 1 }}
+                        contentContainerStyle={styles.contentContainer}
                         keyboardShouldPersistTaps="handled"
                         onScroll={(e) => {
                             const { contentOffset, layoutMeasurement, contentSize } = e.nativeEvent;
@@ -354,6 +354,9 @@ const styles = StyleSheet.create({
     buttonContainer: {
         marginVertical: 20,
         marginHorizontal: 80
+    },
+    contentContainer: {
+        flexGrow: 1
     }
 });
 

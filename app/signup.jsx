@@ -41,7 +41,7 @@ export default function SignUp() {
     return (
         <ImageBackground source={backgroundImage} style={styles.container} resizeMode="cover">
             <KeyboardAvoidingView
-                style={{ flex: 1 }}
+                style={styles.keyboardAvoiding}
                 behavior={Platform.OS === "ios" ? "padding" : "height"} >
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                     <ScrollView>
@@ -83,10 +83,10 @@ export default function SignUp() {
                             <Image source={require("../assets/images/facebook-icon.png")} style={styles.socialIcon} />
                             <Image source={require("../assets/images/apple-icon.png")} style={styles.socialIcon} />
                         </View>
-                        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                        <View style={styles.bottomTextRow}>
                             <Text>Already have an account? </Text>
                             <Pressable onPress={() => router.push("/login")}>
-                                <Text style={{ fontWeight: 'bold' }}>sign in</Text>
+                                <Text style={styles.linkText}>sign in</Text>
                             </Pressable>
                         </View>
                     </ScrollView>
@@ -142,7 +142,17 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         gap: 20,
         alignItems: "center"
-    }
+    },
+    keyboardAvoiding: {
+        flex: 1,
+    },
+    bottomTextRow: {
+        flexDirection: "row",
+        justifyContent: "center",
+    },
+    linkText: {
+        fontWeight: 'bold',
+    },
 });
 
 
