@@ -3,6 +3,7 @@ import backgroundImage from '../assets/images/Violet.png';
 import { useRouter } from "expo-router";
 import Feather from '@expo/vector-icons/Feather';
 import Octicons from '@expo/vector-icons/Octicons';
+import { defaultShadow } from "../styles/shadows";
 
 export default function Profile() {
   const router = useRouter();

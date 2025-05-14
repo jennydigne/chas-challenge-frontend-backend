@@ -8,6 +8,7 @@ import { useRouter } from "expo-router";
 import backgroundImage from "../assets/images/Violet.png";
 import MyButton from "./components/Button";
 import { generateProfileFromAnswers } from "../generateUserProfile";
+import { defaultShadow } from "../styles/shadows";
 
 export default function OnboardingChat() {
     const [messages, setMessages] = useState([]);
@@ -308,7 +309,7 @@ const styles = StyleSheet.create({
     botBubble: {
         alignSelf: "flex-start",
         backgroundColor: "#FAFAFA",
-        defaultShadow,
+        ...defaultShadow,
         padding: 10,
         marginVertical: 20,
         borderRadius: 8,
