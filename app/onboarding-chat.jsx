@@ -132,7 +132,7 @@ export default function OnboardingChat() {
     if (!user) {
         return (
             <View style={styles.container}>
-                <Text style={{ marginTop: 40, fontSize: 18, textAlign: "center" }}>
+                <Text style={styles.loginText}>
                     You need to be signed in to use the onboarding.
                 </Text>
                 <MyButton title="Sign in" onPress={() => router.push("/login")} />
@@ -143,10 +143,10 @@ export default function OnboardingChat() {
     const currentOptions = onboardingQuestions[onboardingStep]?.options || [];
 
     return (
-        <ImageBackground source={backgroundImage} style={{ flex: 1 }} resizeMode="cover">
-            <SafeAreaView style={{ flex: 1 }}>
+        <ImageBackground source={backgroundImage} style={styles.background}>
+            <SafeAreaView style={styles.container}>
                 <KeyboardAvoidingView
-                    style={{ flex: 1 }}
+                    style={styles.container}
                     behavior={Platform.OS === "ios" ? "padding" : "height"}
                     keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0}
                 >
@@ -178,7 +178,6 @@ export default function OnboardingChat() {
                             </View>
                             <View style={styles.hr} />
                         </View>
-
                         <View style={styles.chatWrapper}>
                             {[...messages].reverse().map((item) => (
                                 <View
@@ -215,7 +214,6 @@ export default function OnboardingChat() {
                                             );
                                         })}
                                     </View>
-
                                     <View style={styles.inputContainer}>
                                         <TextInput
                                             style={styles.input}
@@ -228,9 +226,8 @@ export default function OnboardingChat() {
                                     </View>
                                 </>
                             )}
-
                             {showProfileButton && (
-                                <View style={{ marginVertical: 20, marginHorizontal: 80 }}>
+                                <View style={styles.buttonContainer}>
                                     <MyButton title="Go to profile" onPress={() => router.push("/profile")} />
                                 </View>
                             )}
@@ -245,6 +242,10 @@ export default function OnboardingChat() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+    background: {
+        resizeMode: "cover",
+        flex: 1
     },
     header: {
         paddingTop: 10,
@@ -275,11 +276,12 @@ const styles = StyleSheet.create({
         width: "100%",
         height: 1,
         backgroundColor: "#ccc",
-        marginTop: 20,
+        marginTop: 30,
     },
     chatWrapper: {
         flex: 1,
         paddingHorizontal: 20,
+        paddingTop: 20
     },
     inputContainer: {
         flexDirection: "row",
@@ -308,7 +310,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#FAFAFA",
         boxShadow: "0px -2px 4px 0px rgba(0, 0, 0, 0.10) inset, 0px 2px 4px 0px rgba(0, 0, 0, 0.10)",
         padding: 10,
-        marginVertical: 10,
+        marginVertical: 20,
         borderRadius: 8,
         maxWidth: "80%",
     },
@@ -344,5 +346,14 @@ const styles = StyleSheet.create({
     optionTextSelected: {
         color: "#fff",
     },
+    loginText: {
+        marginTop: 40,
+        fontSize: 18,
+        textAlign: "center"
+    },
+    buttonContainer: {
+        marginVertical: 20,
+        marginHorizontal: 80
+    }
 });
 
