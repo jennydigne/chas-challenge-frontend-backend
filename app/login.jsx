@@ -27,7 +27,7 @@ export default function LoginScreen() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       Alert.alert("Login successful!");
-      router.replace("/chat");
+      router.replace("/profile");
     } catch (error) {
       Alert.alert("Login failed", error.message);
     }
