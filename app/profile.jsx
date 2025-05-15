@@ -4,6 +4,7 @@ import { useRouter } from "expo-router";
 import Feather from '@expo/vector-icons/Feather';
 import Octicons from '@expo/vector-icons/Octicons';
 import { defaultShadow } from "../styles/shadows";
+import LogoutButton from "./components/LogoutButton";
 
 export default function Profile() {
   const router = useRouter();
@@ -12,6 +13,7 @@ export default function Profile() {
     <ImageBackground source={backgroundImage} style={styles.container} resizeMode="cover">
       <View style={styles.header}>
         <View style={styles.icons}>
+          <LogoutButton /> 
           <Feather name="edit" size={20} color="#191919" style={styles.icon} />
           <Feather name="hexagon" size={20} color="black" />
         </View>
