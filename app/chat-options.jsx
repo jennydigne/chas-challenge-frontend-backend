@@ -1,21 +1,25 @@
 import backgroundImage from '../assets/images/Violet.png';
 import { useRouter } from "expo-router";
 import MyButton from "./components/Button";
-import { StyleSheet, Image, ImageBackground, View } from 'react-native';
+import { StyleSheet, Image, ImageBackground, View, Pressable } from 'react-native';
+import Feather from '@expo/vector-icons/Feather';
 
 export default function ChatOptions() {
     const router = useRouter();
     return (
         <ImageBackground source={backgroundImage} style={styles.container} resizeMode="cover">
+            <Pressable onPress={() => router.push("/profile")}>
+                <Feather name="chevron-left" size={30} color="black" />
+            </Pressable>
             <View style={styles.header}>
                 <Image
                     source={require("../assets/images/purple-ellipse.png")}
                     style={styles.avatar}
                 />
             </View>
-            <View style={styles.buttons}>
-                <MyButton title="Continue last chat" onPress={() => router.push("/chat-options")} />
-                <MyButton title="Start new chat" onPress={() => router.push("/chat-options")} />
+            <View>
+                <MyButton style={styles.buttonSpacing} title="Continue last chat" onPress={() => router.push("/chat?mode=continue")} />
+                <MyButton title="Start new chat" onPress={() => router.push("/chat?mode=new")} />
             </View>
         </ImageBackground>
     );
@@ -42,7 +46,7 @@ const styles = StyleSheet.create({
         padding: 40,
         flex: 1
     },
-    buttons: {
-        gap: 30
+    buttonSpacing: {
+        marginBottom: 30
     }
 })
