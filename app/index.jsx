@@ -13,16 +13,17 @@ export default function HomeScreen() {
         <Image style={styles.image}
           source={require("../assets/images/LogoText.png")}
         />
-        <View style={styles.buttons}>
+        <View>
           <MyButton title="Sign in" onPress={() => router.push("/login")} />
           <Divider
             text="or"
             paddingHorizontal={60}
-            marginBottom={10}
-            marginTop={10}
+            marginBottom={15}
+            marginTop={15}
           />
           <MyButton title="Sign up" onPress={() => router.push("/signup")} />
         </View>
+
         {/* Testlänkar */}
         <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
           <Button title="chat" onPress={() => router.push("/chat")} />
@@ -47,15 +48,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    gap: 60,
     paddingHorizontal: 20,
   },
   image: {
     width: 195,
-    height: 50.9
+    height: 50.9,
+    marginBottom: 60
   },
-  buttons: {
-    gap: 5
-  }
 });
 

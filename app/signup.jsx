@@ -49,7 +49,7 @@ export default function SignUp() {
                             <Pressable onPress={() => router.push("/")}>
                                 <Feather name="chevron-left" size={30} color="black" />
                             </Pressable>
-                            <Image source={require("../assets/images/Progressbar.png")} />
+                            <Image source={require("../assets/images/Progressbar.png")} style={styles.progress} />
                         </View>
                         <Text style={styles.title}>Sign up</Text>
                         <View style={styles.form}>
@@ -114,6 +114,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         padding: 12,
         marginBottom: 25,
+        backgroundColor: "#FAFAFA",
     },
     label: {
         fontSize: 14,
@@ -129,19 +130,20 @@ const styles = StyleSheet.create({
     iconRow: {
         flexDirection: 'row',
         justifyContent: 'center',
-        gap: 16,
         marginVertical: 25,
     },
     socialIcon: {
         width: 46,
         height: 46,
-        marginHorizontal: 5,
+        marginHorizontal: 10
     },
     top: {
         marginBottom: 40,
         flexDirection: "row",
-        gap: 20,
         alignItems: "center"
+    },
+    progress: {
+        marginLeft: 10
     },
     keyboardAvoiding: {
         flex: 1,

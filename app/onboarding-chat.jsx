@@ -288,7 +288,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         marginBottom: 10,
-        gap: 6,
     },
     input: {
         flex: 1,
@@ -296,6 +295,7 @@ const styles = StyleSheet.create({
         borderColor: "#ccc",
         borderRadius: 8,
         padding: 10,
+        marginRight: 6
     },
     userBubble: {
         alignSelf: "flex-end",
@@ -327,7 +327,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         flexWrap: "wrap",
         marginBottom: 10,
-        gap: 6,
     },
     optionButton: {
         borderWidth: 1,
@@ -335,7 +334,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         paddingVertical: 10,
         paddingHorizontal: 12,
-        marginRight: 8,
+        marginRight: 6,
         marginBottom: 6,
     },
     optionButtonSelected: {

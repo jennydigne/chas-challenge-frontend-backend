@@ -7,12 +7,13 @@ import { defaultShadow } from "../styles/shadows";
 
 export default function Profile() {
   const router = useRouter();
+  
   return (
     <ImageBackground source={backgroundImage} style={styles.container} resizeMode="cover">
       <View style={styles.header}>
         <View style={styles.icons}>
-          <Feather name="edit" size={20} color="#191919" />
-          <Feather name="hexagon" size={24} color="black" />
+          <Feather name="edit" size={20} color="#191919" style={styles.icon} />
+          <Feather name="hexagon" size={20} color="black" />
         </View>
         <Image
           source={require("../assets/images/purple-ellipse.png")}
@@ -76,7 +77,8 @@ const styles = StyleSheet.create({
     zIndex: 1,
     justifyContent: "center",
     alignItems: "center",
-    width: "100%"
+    width: "100%",
+    position: "relative"
   },
   text: {
     fontSize: 28,
@@ -87,12 +89,14 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 60,
     marginBottom: 10,
-    alignSelf: "center"
+    alignSelf: "center",
   },
   content: {
     flex: 1,
     padding: 20,
-    justifyContent: "flex-start"
+    justifyContent: "flex-start",
+    zIndex: 1,
+    position: "relative"
   },
   row: {
     flexDirection: "row",
@@ -120,7 +124,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingVertical: 30,
     backgroundColor: "#FAFAFA",
-    ...defaultShadow
+    ...defaultShadow,
+    zIndex: 1,
+    position: "relative",
   },
   navItem: {
     alignItems: "center",
@@ -134,7 +140,9 @@ const styles = StyleSheet.create({
     top: 20,
     right: 20,
     flexDirection: "row",
-    gap: 8,
     alignItems: "center"
-  }
+  },
+  icon: {
+    marginRight: 8
+  },
 });
