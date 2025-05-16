@@ -8,12 +8,12 @@ import LogoutButton from "./components/LogoutButton";
 
 export default function Profile() {
   const router = useRouter();
-  
+
   return (
     <ImageBackground source={backgroundImage} style={styles.container} resizeMode="cover">
       <View style={styles.header}>
         <View style={styles.icons}>
-          <LogoutButton /> 
+          <LogoutButton />
           <Feather name="edit" size={20} color="#191919" style={styles.icon} />
           <Feather name="hexagon" size={20} color="black" />
         </View>
@@ -27,17 +27,21 @@ export default function Profile() {
       <View style={styles.content}>
         <View style={styles.row}>
           <View style={styles.card}>
+            <Image source={require("../assets/images/checkin.png")} style={styles.cardImage}/>
             <Text style={styles.cardText}>Check in</Text>
           </View>
           <View style={styles.card}>
+            <Image source={require("../assets/images/moodtrack.png")} style={styles.cardImage}/>
             <Text style={styles.cardText}>Mood track</Text>
           </View>
         </View>
         <View style={styles.row}>
           <View style={styles.card}>
+            <Image source={require("../assets/images/saved.png")} style={styles.cardImage}/>
             <Text style={styles.cardText}>Saved</Text>
           </View>
           <View style={styles.card}>
+            <Image source={require("../assets/images/learn.png")} style={styles.cardImage}/>
             <Text style={styles.cardText}>Learn</Text>
           </View>
         </View>
@@ -106,9 +110,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   card: {
-    backgroundColor: "#fff",
+    backgroundColor: "#FAFAFA",
     borderRadius: 10,
-    width: "48%",
+    width: "46%",
     height: 120,
     ...defaultShadow,
     justifyContent: "flex-end"
@@ -147,4 +151,10 @@ const styles = StyleSheet.create({
   icon: {
     marginRight: 8
   },
+  cardImage: {
+    alignSelf: "center",
+    height: 56,
+    width: 56,
+    marginBottom: 5
+  }
 });
