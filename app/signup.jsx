@@ -7,6 +7,7 @@ import Divider from "./components/Divider";
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
 import Feather from '@expo/vector-icons/Feather';
+import ProgressBar from "./components/ProgressBar";
 
 export default function SignUp() {
     const router = useRouter();
@@ -49,7 +50,7 @@ export default function SignUp() {
                             <Pressable onPress={() => router.push("/")}>
                                 <Feather name="chevron-left" size={30} color="black" />
                             </Pressable>
-                            <Image source={require("../assets/images/Progressbar.png")} style={styles.progress} />
+                            <ProgressBar style={styles.progress} progress={1 / 4} />
                         </View>
                         <Text style={styles.title}>Sign up</Text>
                         <View style={styles.form}>
