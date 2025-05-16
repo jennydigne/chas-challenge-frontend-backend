@@ -5,9 +5,46 @@ import Feather from '@expo/vector-icons/Feather';
 import Octicons from '@expo/vector-icons/Octicons';
 import { defaultShadow } from "../styles/shadows";
 import LogoutButton from "./components/LogoutButton";
+import { useState, useEffect } from "react";
+import { getAuth } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../firebaseConfig";
 
 export default function Profile() {
   const router = useRouter();
+  const [name, setName] = useState("");
+
+  useEffect(() => {
+    const fetchName = async () => {
+      const auth = getAuth();
+      const user = auth.currentUser;
+
+      if (!user) return;
+
+      try {
+        const docRef = doc(db, "profiles", user.uid, "personal", "data");
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          if (data?.name) {
+            setName(data.name.split(" ")[0]);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching name:", error);
+      }
+    };
+
+    fetchName();
+  }, []);
+
+  const getGreeting = () => {
+  const hour = new Date().getHours();
+  if (hour < 12) return "Good morning";
+  if (hour < 18) return "Good afternoon";
+  return "Good evening";
+};
 
   return (
     <ImageBackground source={backgroundImage} style={styles.container} resizeMode="cover">
@@ -21,27 +58,27 @@ export default function Profile() {
           source={require("../assets/images/purple-ellipse.png")}
           style={styles.avatar}
         />
-        <Text style={styles.text}>Good morning!</Text>
+        <Text style={styles.text}>{getGreeting()}, {name}!</Text>
       </View>
 
       <View style={styles.content}>
         <View style={styles.row}>
           <View style={styles.card}>
-            <Image source={require("../assets/images/checkin.png")} style={styles.cardImage}/>
+            <Image source={require("../assets/images/checkin.png")} style={styles.cardImage} />
             <Text style={styles.cardText}>Check in</Text>
           </View>
           <View style={styles.card}>
-            <Image source={require("../assets/images/moodtrack.png")} style={styles.cardImage}/>
+            <Image source={require("../assets/images/moodtrack.png")} style={styles.cardImage} />
             <Text style={styles.cardText}>Mood track</Text>
           </View>
         </View>
         <View style={styles.row}>
           <View style={styles.card}>
-            <Image source={require("../assets/images/saved.png")} style={styles.cardImage}/>
+            <Image source={require("../assets/images/saved.png")} style={styles.cardImage} />
             <Text style={styles.cardText}>Saved</Text>
           </View>
           <View style={styles.card}>
-            <Image source={require("../assets/images/learn.png")} style={styles.cardImage}/>
+            <Image source={require("../assets/images/learn.png")} style={styles.cardImage} />
             <Text style={styles.cardText}>Learn</Text>
           </View>
         </View>
