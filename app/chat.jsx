@@ -76,6 +76,7 @@ export default function Chat() {
 
   useEffect(() => {
     if (!user) return;
+    console.log("Inloggad som:", user.email);
 
     const messagesRef = collection(db, "users", user.uid, "messages");
     const q = query(messagesRef, orderBy("timestamp", "desc"));
@@ -130,7 +131,8 @@ export default function Chat() {
             Authorization: `Bearer ${OPENAI_API_KEY}`,
           },
           body: JSON.stringify({
-            model: "gpt-4o",
+            // model: "gpt-4o",
+            model: "gpt-3.5-turbo",
             messages: [
               {
                 role: "system",
