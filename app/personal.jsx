@@ -1,84 +1,140 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { router, useRouter } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
+import { useState } from 'react';
+import { View, Text, TextInput, StyleSheet, Pressable, ImageBackground, Alert } from 'react-native';
+import { useRouter } from 'expo-router';
+import Feather from "@expo/vector-icons/Feather";
+import MyButton from "./components/Button";
+import ProgressBar from './components/ProgressBar';
+import backgroundImage from '../assets/images/Violet.png';
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "../firebaseConfig";
+import { getAuth } from "firebase/auth";
 
 export default function Personal() {
   const router = useRouter();
-  const navigation = useNavigation();
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
+  const [birthDate, setbirthDate] = useState("");
+  const [gender, setGender] = useState("");
 
-  const handleContinue = () => {
-    // Vi kan lägga till validering här innan du navigerar vidare
-    navigation.navigate('NextStep'); // Byt ut 'NextStep' mot din nästa skärm
+  const isFormValid = name.trim() !== "" && username.trim() !== "" && gender !== "" && birthDate !== "";
+
+  const saveProfileData = async () => {
+    if (!isFormValid) {
+      Alert.alert("Please fill in all fields before continuing.");
+      return;
+    }
+
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (!user) {
+      Alert.alert("No user logged in");
+      return;
+    }
+
+    try {
+       const personalDocRef = doc(db, "profiles", user.uid, "personal", "data");
+      await setDoc(personalDocRef, {
+        name,
+        username,
+        birthDate,
+        gender,
+      }, { merge: true });  
+
+      router.push("/getstarted");
+    } catch (error) {
+      Alert.alert("Failed to save profile data", error.message);
+    }
   };
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={() => router.push('/verify')} style={styles.backButton}>
-        <Ionicons name="chevron-back" size={24} color="black" />
-      </TouchableOpacity>
+    <ImageBackground source={backgroundImage} style={styles.background}>
+      <View style={styles.container}>
+        <View style={styles.top}>
+          <Pressable onPress={() => router.push("/chat-options")}>
+            <Feather name="chevron-left" size={30} color="black" />
+          </Pressable>
+          <View style={styles.progress}>
+            <ProgressBar style={styles.progress} progress={3 / 4} />
+          </View>
+        </View>
 
-      <View style={styles.progressBarContainer}>
-        <View style={styles.progressBarActive} />
-        <View style={styles.progressBarInactive} />
+        <Text style={styles.title}>Personal data</Text>
+
+        <Text style={styles.label}>Name</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="John Doe"
+          placeholderTextColor={'#aaa'}
+          value={name}
+          onChangeText={setName}
+        />
+
+        <Text style={styles.label}>Username</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="your_username"
+          placeholderTextColor={'#aaa'}
+          value={username}
+          onChangeText={setUsername}
+        />
+        <Text style={styles.label}>Date of birth</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="ÅÅÅÅ-MM-DD"
+          placeholderTextColor={'#aaa'}
+          value={birthDate}
+          onChangeText={setbirthDate}
+        />
+        <Text style={styles.label}>Gender</Text>
+        <View style={styles.genderContainer}>
+          {['Male', 'Female', 'Other'].map((option) => (
+            <Pressable
+              key={option}
+              onPress={() => setGender(option)}
+              style={[
+                styles.genderButton,
+                gender === option && styles.genderButtonSelected
+              ]}
+            >
+              <View style={[
+                styles.radioOuter,
+                gender === option && styles.radioOuterSelected
+              ]}>
+                {gender === option && <View style={styles.radioInner} />}
+              </View>
+              <Text style={styles.genderText}>{option}</Text>
+            </Pressable>
+          ))}
+        </View>
+        <MyButton
+          title="Continue"
+          onPress={saveProfileData}
+          disabled={!isFormValid}
+        />
       </View>
-
-      <Text style={styles.title}>Personal data</Text>
-
-      <Text style={styles.label}>Name</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="John Doe"
-        placeholderTextColor={'#aaa'}
-        value={name}
-        onChangeText={setName}
-      />
-
-      <Text style={styles.label}>Username</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="your_username"
-        placeholderTextColor={'#aaa'}
-        value={username}
-        onChangeText={setUsername}
-      />
-
-      <TouchableOpacity style={styles.button} onPress={handleContinue}>
-        <Text style={styles.buttonText}>Continue</Text>
-      </TouchableOpacity>
-    </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+    resizeMode: "cover"
+  },
   container: {
     flex: 1,
-    paddingTop: 60,
-    paddingHorizontal: 20,
-    backgroundColor: '#fff',
+    paddingVertical: 38,
+    paddingHorizontal: 40,
   },
-  backButton: {
-    marginBottom: 10,
-  },
-  progressBarContainer: {
-    flexDirection: 'row',
-    height: 4,
-    marginBottom: 30,
-  },
-  progressBarActive: {
-    flex: 1,
-    backgroundColor: 'black',
-  },
-  progressBarInactive: {
-    flex: 1,
-    backgroundColor: '#ccc',
+  top: {
+    marginBottom: 40,
+    flexDirection: "row",
+    alignItems: "center"
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 28,
+    fontWeight: "600",
     marginBottom: 30,
   },
   label: {
@@ -94,16 +150,41 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     fontSize: 16,
   },
-  button: {
-    backgroundColor: '#444',
-    padding: 16,
-    borderRadius: 10,
+  progress: {
+    marginLeft: 20,
+    flex: 1
+  },
+  genderContainer: {
+    flexDirection: 'row',
+    gap: 20,
+    marginBottom: 30,
     alignItems: 'center',
-    marginTop: 10,
   },
-  buttonText: {
-    color: '#fff',
-    fontWeight: '600',
+  genderButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  radioOuter: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: '#693ED6',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 8,
+  },
+  radioOuterSelected: {
+    borderColor: '#693ED6',
+  },
+  radioInner: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: '#693ED6',
+  },
+  genderText: {
     fontSize: 16,
-  },
+  }
 });
+
