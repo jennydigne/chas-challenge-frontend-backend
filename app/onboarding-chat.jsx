@@ -134,7 +134,7 @@ export default function OnboardingChat() {
         return (
             <View style={styles.container}>
                 <Text style={styles.loginText}>
-                    You need to be signed in to use the onboarding.
+                    Please sign in to your account!
                 </Text>
                 <MyButton title="Sign in" onPress={() => router.push("/login")} />
             </View>
