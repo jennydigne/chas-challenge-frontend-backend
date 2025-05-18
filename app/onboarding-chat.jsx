@@ -1,14 +1,14 @@
 import { useState, useEffect, useRef } from "react";
-import { View, TextInput, Text, StyleSheet, KeyboardAvoidingView, Platform, SafeAreaView, Image, ImageBackground, TouchableOpacity, ScrollView, Button } from "react-native";
+import { View, TextInput, Text, StyleSheet, KeyboardAvoidingView, Platform, SafeAreaView, Image, ImageBackground, TouchableOpacity, ScrollView, Button, Pressable } from "react-native";
 import { getAuth } from "firebase/auth";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebaseConfig";
-import LogoutButton from "./components/LogoutButton";
 import { useRouter } from "expo-router";
 import backgroundImage from "../assets/images/Violet.png";
 import MyButton from "./components/Button";
 import { generateProfileFromAnswers } from "../generateUserProfile";
 import { defaultShadow } from "../styles/shadows";
+import Feather from "@expo/vector-icons/Feather";
 
 export default function OnboardingChat() {
     const [messages, setMessages] = useState([]);
@@ -165,9 +165,9 @@ export default function OnboardingChat() {
                         scrollEventThrottle={100}
                     >
                         <View style={styles.header}>
-                            <View style={styles.logoutContainer}>
-                                <LogoutButton />
-                            </View>
+                                <Pressable onPress={() => router.push("/getstarted")}>
+                                    <Feather name="chevron-left" size={30} color="black" />
+                                </Pressable>
                             <View style={styles.centered}>
                                 <Image
                                     source={require("../assets/images/purple-ellipse.png")}
@@ -252,10 +252,6 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         paddingHorizontal: 10,
         zIndex: 1,
-    },
-    logoutContainer: {
-        alignItems: "flex-end",
-        marginBottom: 10,
     },
     centered: {
         justifyContent: "flex-start",
