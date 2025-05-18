@@ -1,21 +1,6 @@
 import { useState, useEffect } from "react";
 import { OPENAI_API_KEY } from "@env";
-import {
-  View,
-  TextInput,
-  Button,
-  FlatList,
-  Text,
-  StyleSheet,
-  KeyboardAvoidingView,
-  Platform,
-  SafeAreaView,
-  Image,
-  ImageBackground,
-  Pressable,
-  TouchableOpacity
-
-} from "react-native";
+import { View, TextInput, Button, FlatList, Text, StyleSheet, KeyboardAvoidingView, Platform, SafeAreaView, Image, ImageBackground, Pressable, TouchableOpacity } from "react-native";
 import { getAuth } from "firebase/auth";
 import { saveMessage } from "../saveMessage";
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
@@ -217,8 +202,9 @@ export default function Chat() {
                 value={input}
                 onChangeText={setInput}
                 placeholder="Write a message"
+                multiline
               />
-              <Button title="Send" onPress={sendMessage}></Button>
+              <Button title="Send" onPress={sendMessage} />
             </View>
           </SafeAreaView>
         </KeyboardAvoidingView>
@@ -313,6 +299,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 10,
     marginRight: 6,
+    textAlignVertical: "top"
   },
   userBubble: {
     alignSelf: "flex-end",
