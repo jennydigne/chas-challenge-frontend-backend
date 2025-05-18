@@ -299,11 +299,12 @@ const styles = StyleSheet.create({
   chatContainer: {
     flex: 1,
     justifyContent: "flex-end",
+    marginBottom: 10
   },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 10,
+    marginBottom: 20,
   },
   input: {
     flex: 1,
@@ -311,7 +312,7 @@ const styles = StyleSheet.create({
     borderColor: "#ccc",
     borderRadius: 8,
     padding: 10,
-    marginRight: 6
+    marginRight: 6,
   },
   userBubble: {
     alignSelf: "flex-end",
