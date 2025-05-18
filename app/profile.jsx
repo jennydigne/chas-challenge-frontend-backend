@@ -3,7 +3,7 @@ import backgroundImage from '../assets/images/Violet.png';
 import { useRouter } from "expo-router";
 import Feather from '@expo/vector-icons/Feather';
 import Octicons from '@expo/vector-icons/Octicons';
-import { defaultShadow } from "../styles/shadows";
+import { defaultShadow, navShadow } from "../styles/shadows";
 import LogoutButton from "./components/LogoutButton";
 import { useState, useEffect } from "react";
 import { getAuth } from "firebase/auth";
@@ -58,7 +58,7 @@ export default function Profile() {
           source={require("../assets/images/purple-ellipse.png")}
           style={styles.avatar}
         />
-        <Text style={styles.text}>{getGreeting()}, {name}!</Text>
+        <Text style={styles.text}>{getGreeting()} {name}!</Text>
       </View>
 
       <View style={styles.content}>
@@ -118,6 +118,7 @@ const styles = StyleSheet.create({
     paddingTop: 40,
     paddingHorizontal: 10,
     zIndex: 1,
+    height: "33%",
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
@@ -139,18 +140,19 @@ const styles = StyleSheet.create({
     padding: 20,
     justifyContent: "flex-start",
     zIndex: 1,
-    position: "relative"
+    position: "relative",
   },
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 20,
+    marginBottom: 5,
+    marginHorizontal: 10
   },
   card: {
     backgroundColor: "#FAFAFA",
     borderRadius: 10,
-    width: "46%",
-    height: 120,
+    width: "48%",
+    aspectRatio: 1,
     ...defaultShadow,
     justifyContent: "flex-end"
   },
@@ -165,9 +167,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     width: "100%",
     borderRadius: 20,
-    paddingVertical: 30,
+    paddingVertical: 15,
     backgroundColor: "#FAFAFA",
-    ...defaultShadow,
+    ...navShadow,
     zIndex: 1,
     position: "relative",
   },
@@ -192,6 +194,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     height: 56,
     width: 56,
-    marginBottom: 5
+    marginBottom: 20
   }
 });
