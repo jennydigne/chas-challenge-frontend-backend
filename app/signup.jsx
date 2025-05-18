@@ -48,9 +48,9 @@ export default function SignUp() {
                     <ScrollView>
                         <View style={styles.top}>
                             <Pressable onPress={() => router.push("/")}>
-                                <Feather name="chevron-left" size={30} color="black" />
+                                <Feather name="chevron-left" size={30} color="black" style={styles.chevron} />
                             </Pressable>
-                            <ProgressBar style={styles.progress} progress={1 / 4} />
+                            <ProgressBar progress={1 / 4} />
                         </View>
                         <Text style={styles.title}>Sign up</Text>
                         <View style={styles.form}>
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 28,
-        fontWeight: "400",
+        fontWeight: "600",
         marginBottom: 40,
     },
     input: {
@@ -143,9 +143,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center"
     },
-    progress: {
-        marginLeft: 10
-    },
     keyboardAvoiding: {
         flex: 1,
     },
@@ -156,6 +153,9 @@ const styles = StyleSheet.create({
     linkText: {
         fontWeight: 'bold',
     },
+    chevron: {
+        marginRight: 20
+    }
 });
 
 

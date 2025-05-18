@@ -1,14 +1,14 @@
-import React, { useState, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { useState, useRef } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Pressable, ImageBackground, Button } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import Feather from "@expo/vector-icons/Feather";
+import ProgressBar from './components/ProgressBar';
+import backgroundImage from '../assets/images/Violet.png';
 
 export default function VerifyScreen() {
   const [code, setCode] = useState(Array(6).fill(''));
   const inputs = useRef([]);
   const router = useRouter();
-  const navigation = useNavigation(); // For back button
 
   const handleChange = (text, index) => {
     if (text.length > 1) return;
@@ -29,88 +29,67 @@ export default function VerifyScreen() {
     const codeString = code.join('');
     if (codeString.length === 6) {
       console.log('Code submitted:', codeString);
-      router.push('/personal'); // Go to Personal screen
+      router.push('/personal');
     } else {
       alert('Please enter a 6-digit code');
     }
   };
 
   return (
-    <View style={styles.container}>
-      {/* Back button */}
-      <TouchableOpacity onPress={() => router.push('/signup')} style={styles.backButton}>
-        <Ionicons name="chevron-back" size={24} color="black" />
-      </TouchableOpacity>
+    <ImageBackground source={backgroundImage} style={styles.background}>
+      <View style={styles.container}>
+        <View style={styles.top}>
+          <Pressable onPress={() => router.push("/signup")}>
+            <Feather name="chevron-left" size={30} color="black" />
+          </Pressable>
+          <View style={styles.progress}>
+            <ProgressBar progress={2 / 4} />
+          </View>
+        </View>
+        <Text style={styles.title}>Verify account</Text>
+        <Text style={styles.subtitle}>
+          Check your email inbox, we have sent you the code at <Text style={{ fontWeight: 'bold' }}>xxx@example.com</Text>
+        </Text>
 
-      {/* Progress bar */}
-      <View style={styles.progressBarContainer}>
-        <View style={styles.progressBarActive} />
-        <View style={styles.progressBarInactive} />
+        <View style={styles.codeContainer}>
+          {code.map((digit, index) => (
+            <TextInput
+              key={index}
+              ref={(ref) => (inputs.current[index] = ref)}
+              value={digit}
+              onChangeText={(text) => handleChange(text, index)}
+              keyboardType="numeric"
+              maxLength={1}
+              style={styles.codeInput}
+            />
+          ))}
+        </View>
+
+        <View style={styles.resendContainer}>
+          <Text style={styles.grayText}>Didn't receive the code?</Text>
+          <TouchableOpacity onPress={resendCode}>
+            <Text style={styles.resendText}>Resend Code</Text>
+          </TouchableOpacity>
+        </View>
+        <Button title="Submit" onPress={handleSubmit} />
       </View>
-
-      <Text style={styles.title}>Verify account</Text>
-      <Text style={styles.subtitle}>
-        Check your email inbox, we have sent you the code at <Text style={{ fontWeight: 'bold' }}>xxx@example.com</Text>
-      </Text>
-
-      <View style={styles.codeContainer}>
-        {code.map((digit, index) => (
-          <TextInput
-            key={index}
-            ref={(ref) => (inputs.current[index] = ref)}
-            value={digit}
-            onChangeText={(text) => handleChange(text, index)}
-            keyboardType="numeric"
-            maxLength={1}
-            style={styles.codeInput}
-          />
-        ))}
-      </View>
-
-      <View style={styles.resendContainer}>
-        <TouchableOpacity onPress={resendCode}>
-          <Text style={styles.resendText}>Resend Code</Text>
-        </TouchableOpacity>
-        <Text style={styles.grayText}>Didn’t not receive the code?</Text>
-      </View>
-
-      <TouchableOpacity onPress={handleSubmit}>
-        <Text style={styles.submitButton}>Submit</Text>
-      </TouchableOpacity>
-    </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+    resizeMode: "cover"
+  },
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    paddingHorizontal: 24,
-    paddingTop: 60,
-  },
-  backButton: {
-    marginBottom: 10,
-  },
-  progressBarContainer: {
-    flexDirection: 'row',
-    height: 4,
-    marginBottom: 40,
-    marginHorizontal: 16,
-  },
-  progressBarActive: {
-    flex: 1,
-    backgroundColor: 'black',
-    borderRadius: 2,
-  },
-  progressBarInactive: {
-    flex: 1,
-    backgroundColor: '#E0E0E0',
-    borderRadius: 2,
-    marginLeft: 4,
+    paddingHorizontal: 40,
+    paddingVertical: 38
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 28,
+    fontWeight: "600",
     marginBottom: 8,
     color: '#000',
   },
@@ -143,7 +122,7 @@ const styles = StyleSheet.create({
   },
   grayText: {
     color: '#666',
-    fontSize: 13,
+    fontSize: 14,
   },
   submitButton: {
     fontSize: 18,
@@ -151,5 +130,14 @@ const styles = StyleSheet.create({
     color: 'blue',
     textAlign: 'center',
     marginTop: 20,
+  },
+  progress: {
+    marginLeft: 20,
+    flex: 1
+  },
+  top: {
+    marginBottom: 40,
+    flexDirection: "row",
+    alignItems: "center",
   },
 });

@@ -33,13 +33,13 @@ export default function Personal() {
     }
 
     try {
-       const personalDocRef = doc(db, "profiles", user.uid, "personal", "data");
+      const personalDocRef = doc(db, "profiles", user.uid, "personal", "data");
       await setDoc(personalDocRef, {
         name,
         username,
         birthDate,
         gender,
-      }, { merge: true });  
+      }, { merge: true });
 
       router.push("/getstarted");
     } catch (error) {
@@ -51,11 +51,11 @@ export default function Personal() {
     <ImageBackground source={backgroundImage} style={styles.background}>
       <View style={styles.container}>
         <View style={styles.top}>
-          <Pressable onPress={() => router.push("/chat-options")}>
+          <Pressable onPress={() => router.push("/verify")}>
             <Feather name="chevron-left" size={30} color="black" />
           </Pressable>
           <View style={styles.progress}>
-            <ProgressBar style={styles.progress} progress={3 / 4} />
+            <ProgressBar progress={3 / 4} />
           </View>
         </View>
 
@@ -81,7 +81,7 @@ export default function Personal() {
         <Text style={styles.label}>Date of birth</Text>
         <TextInput
           style={styles.input}
-          placeholder="ÅÅÅÅ-MM-DD"
+          placeholder="YYYY-MM-DD"
           placeholderTextColor={'#aaa'}
           value={birthDate}
           onChangeText={setbirthDate}
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
   top: {
     marginBottom: 40,
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
   },
   title: {
     fontSize: 28,
@@ -185,6 +185,6 @@ const styles = StyleSheet.create({
   },
   genderText: {
     fontSize: 16,
-  }
+  },
 });
 
