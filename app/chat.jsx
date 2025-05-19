@@ -155,9 +155,9 @@ export default function Chat() {
     <ImageBackground source={backgroundImage} style={styles.background}>
       <View style={styles.container}>
         <View style={styles.header}>
-          <View style={styles.topIcons}>
-            <Pressable onPress={() => router.push("/chat-options")}>
-              <Feather name="chevron-left" size={30} color="black" />
+          <View style={styles.xIcon}>
+            <Pressable onPress={() => router.push("/profile")}>
+              <Feather name="x" size={24} color="black" />
             </Pressable>
           </View>
           <View style={styles.centered}>
@@ -330,15 +330,15 @@ const styles = StyleSheet.create({
   flatListContent: {
     paddingBottom: 10
   },
-  topIcons: {
+  xIcon: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
     alignItems: "center"
   },
   menuIcon: {
     position: "absolute",
     top: 10,
-    right: 10,
+    left: 10,
     zIndex: 20,
     marginRight: 8,
   },
@@ -361,7 +361,8 @@ const styles = StyleSheet.create({
   historyHeading: {
     fontWeight: 500,
     fontSize: 16,
-    marginBottom: 10
+    marginBottom: 10,
+    marginTop: 20
   },
   sessionItem: {
     paddingVertical: 12,
