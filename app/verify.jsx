@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Pressable, ImageBackground, Button } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Pressable, ImageBackground, Button, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import Feather from "@expo/vector-icons/Feather";
 import ProgressBar from './components/ProgressBar';
@@ -16,22 +16,21 @@ export default function VerifyScreen() {
     newCode[index] = text;
     setCode(newCode);
     if (text && index < 5) {
-      inputs.current[index + 1].focus();
+      inputs.current[index + 1]?.focus();
     }
   };
 
   const resendCode = () => {
-    console.log('Code resent');
-    // Add actual resend logic here
+    Alert.alert("A new verification code was (hypothetically) sent.");
   };
 
   const handleSubmit = () => {
     const codeString = code.join('');
     if (codeString.length === 6) {
-      console.log('Code submitted:', codeString);
+      Alert.alert("Success", "Verification code was accepted.");
       router.push('/personal');
     } else {
-      alert('Please enter a 6-digit code');
+      Alert.alert('Error', 'Please enter a 6-digit code');
     }
   };
 
@@ -47,10 +46,7 @@ export default function VerifyScreen() {
           </View>
         </View>
         <Text style={styles.title}>Verify account</Text>
-        <Text style={styles.subtitle}>
-          Check your email inbox, we have sent you the code at <Text style={{ fontWeight: 'bold' }}>xxx@example.com</Text>
-        </Text>
-
+        <Text style={styles.subtitle}>Check your email inbox — we have sent you the code at xxx@example.com</Text>
         <View style={styles.codeContainer}>
           {code.map((digit, index) => (
             <TextInput
@@ -64,7 +60,6 @@ export default function VerifyScreen() {
             />
           ))}
         </View>
-
         <View style={styles.resendContainer}>
           <Text style={styles.grayText}>Didn't receive the code?</Text>
           <TouchableOpacity onPress={resendCode}>
@@ -87,6 +82,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
     paddingVertical: 38
   },
+  top: {
+    marginBottom: 40,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  progress: {
+    marginLeft: 20,
+    flex: 1
+  },
   title: {
     fontSize: 28,
     fontWeight: "600",
@@ -96,7 +100,13 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 16,
     color: '#000',
-    marginBottom: 32,
+    marginBottom: 16,
+  },
+  demoNote: {
+    fontSize: 14,
+    color: '#888',
+    fontStyle: 'italic',
+    marginBottom: 24,
   },
   codeContainer: {
     flexDirection: 'row',
@@ -115,6 +125,7 @@ const styles = StyleSheet.create({
   resendContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginBottom: 30,
   },
   resendText: {
     fontWeight: 'bold',
@@ -123,21 +134,5 @@ const styles = StyleSheet.create({
   grayText: {
     color: '#666',
     fontSize: 14,
-  },
-  submitButton: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: 'blue',
-    textAlign: 'center',
-    marginTop: 20,
-  },
-  progress: {
-    marginLeft: 20,
-    flex: 1
-  },
-  top: {
-    marginBottom: 40,
-    flexDirection: "row",
-    alignItems: "center",
   },
 });
