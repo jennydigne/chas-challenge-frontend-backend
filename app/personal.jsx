@@ -8,6 +8,7 @@ import backgroundImage from '../assets/images/Violet.png';
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import { getAuth } from "firebase/auth";
+import BirthdatePicker from './components/BirthDatePicker';
 
 export default function Personal() {
   const router = useRouter();
@@ -79,13 +80,9 @@ export default function Personal() {
           onChangeText={setUsername}
         />
         <Text style={styles.label}>Date of birth</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="YYYY-MM-DD"
-          placeholderTextColor={'#aaa'}
-          value={birthDate}
-          onChangeText={setbirthDate}
-        />
+        <View>
+          <BirthdatePicker value={birthDate} onChange={setbirthDate} />
+        </View>
         <Text style={styles.label}>Gender</Text>
         <View style={styles.genderContainer}>
           {['Male', 'Female', 'Other'].map((option) => (
@@ -139,13 +136,13 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 6,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
+    borderColor: "#787878",
+    borderRadius: 12,
     padding: 12,
     marginBottom: 20,
     fontSize: 16,
