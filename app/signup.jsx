@@ -6,6 +6,8 @@ import { useRouter } from "expo-router";
 import Divider from "./components/Divider";
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
+import Feather from '@expo/vector-icons/Feather';
+import ProgressBar from "./components/ProgressBar";
 
 export default function SignUp() {
     const router = useRouter();
@@ -40,18 +42,16 @@ export default function SignUp() {
     return (
         <ImageBackground source={backgroundImage} style={styles.container} resizeMode="cover">
             <KeyboardAvoidingView
-                style={{ flex: 1 }}
+                style={styles.keyboardAvoiding}
                 behavior={Platform.OS === "ios" ? "padding" : "height"} >
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                     <ScrollView>
-                        <Pressable onPress={() => router.push("/")}>
-                            <Image source={require("../assets/images/chevron-left.png")}
-                                style={{
-                                    marginBottom: 40,
-                                    width: 24,
-                                    height: 24,
-                                }} />
-                        </Pressable>
+                        <View style={styles.top}>
+                            <Pressable onPress={() => router.push("/")}>
+                                <Feather name="chevron-left" size={30} color="black" style={styles.chevron} />
+                            </Pressable>
+                            <ProgressBar progress={1 / 4} />
+                        </View>
                         <Text style={styles.title}>Sign up</Text>
                         <View style={styles.form}>
                             <Text style={styles.label}>Email</Text>
@@ -84,10 +84,10 @@ export default function SignUp() {
                             <Image source={require("../assets/images/facebook-icon.png")} style={styles.socialIcon} />
                             <Image source={require("../assets/images/apple-icon.png")} style={styles.socialIcon} />
                         </View>
-                        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                        <View style={styles.bottomTextRow}>
                             <Text>Already have an account? </Text>
                             <Pressable onPress={() => router.push("/login")}>
-                                <Text style={{ fontWeight: 'bold' }}>sign in</Text>
+                                <Text style={styles.linkText}>sign in</Text>
                             </Pressable>
                         </View>
                     </ScrollView>
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 28,
-        fontWeight: "400",
+        fontWeight: "600",
         marginBottom: 40,
     },
     input: {
@@ -115,6 +115,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         padding: 12,
         marginBottom: 25,
+        backgroundColor: "#FAFAFA",
     },
     label: {
         fontSize: 14,
@@ -130,14 +131,31 @@ const styles = StyleSheet.create({
     iconRow: {
         flexDirection: 'row',
         justifyContent: 'center',
-        gap: 16,
         marginVertical: 25,
     },
     socialIcon: {
         width: 46,
         height: 46,
-        marginHorizontal: 5,
+        marginHorizontal: 10
     },
+    top: {
+        marginBottom: 40,
+        flexDirection: "row",
+        alignItems: "center"
+    },
+    keyboardAvoiding: {
+        flex: 1,
+    },
+    bottomTextRow: {
+        flexDirection: "row",
+        justifyContent: "center",
+    },
+    linkText: {
+        fontWeight: 'bold',
+    },
+    chevron: {
+        marginRight: 20
+    }
 });
 
 
