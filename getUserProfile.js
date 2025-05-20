@@ -1,11 +1,9 @@
-//Hämtar användarens färdiga profil från databasen
-
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "./firebaseConfig";
 
 export const getUserProfile = async (uid) => {
   try {
-    const profileRef = doc(db, "profiles", uid, "profile");
+    const profileRef = doc(db, "profiles", uid);
     const profileSnap = await getDoc(profileRef);
 
     if (profileSnap.exists()) {
