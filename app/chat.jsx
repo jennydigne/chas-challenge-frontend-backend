@@ -9,6 +9,8 @@ import { useRouter, useLocalSearchParams } from "expo-router";
 import backgroundImage from "../assets/images/Violet.png";
 import { defaultShadow } from "../styles/shadows";
 import Feather from "@expo/vector-icons/Feather";
+import { getUserProfile } from "../getUserProfile";
+import { buildPrompt } from "../buildPrompt";
 
 export default function Chat() {
   const [messages, setMessages] = useState([]);
@@ -106,45 +108,39 @@ export default function Chat() {
     setInput("");
 
     await saveMessage(user.uid, text, "user", sessionId);
+
     try {
-      const response = await fetch(
-        "https://api.openai.com/v1/chat/completions",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${OPENAI_API_KEY}`,
-          },
-          body: JSON.stringify({
-            // model: "gpt-4o",
-            model: "gpt-3.5-turbo",
-            messages: [
-              {
-                role: "system",
-                content: `You are NEU, a compassionate and attentive support assistant designed to help users with emotional well-being and mental health. 
-                          You respond in English and always prioritize empathy, active listening, and safety.`,
-              },
-              {
-                role: "user",
-                content: text,
-              },
-            ],
-            temperature: 0.7,
-          }),
-        }
-      );
+      const profile = await getUserProfile(user.uid);
+
+      const promptMessages = buildPrompt(profile || {}, text);
+      console.log("Prompt sent to OpenAI:", promptMessages);
+
+      const response = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${OPENAI_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: "gpt-3.5-turbo",
+          // model: "gpt-4o",
+          messages: promptMessages,
+          temperature: 0.7,
+        }),
+      });
+
       const data = await response.json();
       console.log(data);
-      const botText =
-        data.choices?.[0]?.message?.content || "No response from NEU.";
+
+      const botText = data.choices?.[0]?.message?.content || "No response from NEU.";
       const botMessage = {
         id: `bot_${uniqueId()}`,
         text: botText,
         sender: "bot",
         sessionId,
       };
-      setMessages((prev) => [botMessage, ...prev]);
 
+      setMessages((prev) => [botMessage, ...prev]);
       await saveMessage(user.uid, botText, "bot", sessionId);
     } catch (error) {
       console.error("API error:", error);
