@@ -58,7 +58,7 @@ export default function Profile() {
           source={require("../assets/images/purple-ellipse.png")}
           style={styles.avatar}
         />
-        <Text style={styles.text}>{getGreeting()} {name}!</Text>
+        <Text style={styles.greeting}>{getGreeting()} {name}!</Text>
       </View>
 
       <View style={styles.content}>
@@ -195,5 +195,10 @@ const styles = StyleSheet.create({
     height: 56,
     width: 56,
     marginBottom: 20
+  },
+  greeting: {
+    textAlign: "center",
+    fontSize: 26,
+    fontWeight: 600
   }
 });
