@@ -6,7 +6,7 @@ import { db } from "../firebaseConfig";
 import { useRouter } from "expo-router";
 import backgroundImage from "../assets/images/Violet.png";
 import MyButton from "./components/Button";
-import { generateProfileFromAnswers } from "../generateUserProfile";
+import { generateProfileFromAnswers } from "../utils/generateUserProfile";
 import { defaultShadow } from "../styles/shadows";
 import Feather from "@expo/vector-icons/Feather";
 

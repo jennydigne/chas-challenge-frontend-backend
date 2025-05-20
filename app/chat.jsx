@@ -2,15 +2,15 @@ import { useState, useEffect } from "react";
 import { OPENAI_API_KEY } from "@env";
 import { View, TextInput, Button, FlatList, Text, StyleSheet, KeyboardAvoidingView, Platform, SafeAreaView, Image, ImageBackground, Pressable, TouchableOpacity } from "react-native";
 import { getAuth } from "firebase/auth";
-import { saveMessage } from "../saveMessage";
+import { saveMessage } from "../utils/saveMessage";
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import backgroundImage from "../assets/images/Violet.png";
 import { defaultShadow } from "../styles/shadows";
 import Feather from "@expo/vector-icons/Feather";
-import { getUserProfile } from "../getUserProfile";
-import { buildPrompt } from "../buildPrompt";
+import { getUserProfile } from "../utils/getUserProfile";
+import { buildPrompt } from "../utils/buildPrompt";
 
 export default function Chat() {
   const [messages, setMessages] = useState([]);

@@ -1,7 +1,5 @@
-//Skapar eller uppdaterar användarens profil i databasen utifrån deras onboarding-svar
-
 import { collection, getDocs, setDoc, doc } from "firebase/firestore";
-import { db } from "./firebaseConfig";
+import { db } from "../firebaseConfig";
 
 export const generateProfileFromAnswers = async (uid) => {
   try {
