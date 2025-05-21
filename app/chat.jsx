@@ -150,29 +150,12 @@ export default function Chat() {
   return (
     <ImageBackground source={backgroundImage} style={styles.background}>
       <View style={styles.container}>
-        <View style={styles.header}>
-          <View style={styles.xIcon}>
-            <Pressable onPress={() => router.push("/profile")}>
-              <Feather name="x" size={24} color="black" />
-            </Pressable>
-          </View>
-          <View style={styles.centered}>
-            <Image
-              source={require("../assets/images/purple-ellipse.png")}
-              style={styles.avatar}
-            />
-            <Text style={styles.name}>
-              {"Hello I'm NEU, your personal AI,\nwhat can I do for you today?"}
-            </Text>
-          </View>
-          <View style={styles.hr} />
-        </View>
         <KeyboardAvoidingView
-          style={styles.chatWrapper}
+          style={styles.container}
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0}
         >
-          <SafeAreaView style={{ flex: 1 }}>
+          <SafeAreaView style={styles.container}>
             <View style={styles.chatContainer}>
               <FlatList
                 data={messages}
@@ -189,7 +172,21 @@ export default function Chat() {
                   </View>
                 )}
                 inverted
-                contentContainerStyle={styles.flatListContent}
+                ListFooterComponent={
+                  <View style={styles.header}>
+                    <View style={styles.centered}>
+                      <Image
+                        source={require("../assets/images/purple-ellipse.png")}
+                        style={styles.avatar}
+                      />
+                      <Text style={styles.name}>
+                        {"Hello I'm NEU, your personal AI,\nwhat can I do for you today?"}
+                      </Text>
+                    </View>
+                    <View style={styles.hr} />
+                  </View>
+                }
+                contentContainerStyle={styles.contentContainer}
               />
             </View>
             <View style={styles.inputContainer}>
@@ -205,6 +202,7 @@ export default function Chat() {
           </SafeAreaView>
         </KeyboardAvoidingView>
       </View>
+
       {showHistory && (
         <View style={styles.historyOverlay}>
           <View style={styles.historyPanel}>
@@ -222,7 +220,9 @@ export default function Chat() {
                   }}
                   style={styles.sessionItem}
                 >
-                  <Text style={styles.sessionText} numberOfLines={1}>{item.text}</Text>
+                  <Text style={styles.sessionText} numberOfLines={1}>
+                    {item.text}
+                  </Text>
                 </TouchableOpacity>
               )}
             />
@@ -233,8 +233,13 @@ export default function Chat() {
         style={styles.menuIcon}
         onPress={() => setShowHistory((prev) => !prev)}
       >
-        <Feather name="menu" size={20} color="black" />
+        <Feather name="menu" size={24} color="black" />
       </TouchableOpacity>
+      <View style={styles.xIcon}>
+        <Pressable onPress={() => router.push("/profile")}>
+          <Feather name="x" size={24} color="black" />
+        </Pressable>
+      </View>
     </ImageBackground>
   );
 }
@@ -251,6 +256,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingHorizontal: 10,
     zIndex: 1,
+    width: "100%"
   },
   centered: {
     justifyContent: "flex-start",
@@ -269,24 +275,22 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   hr: {
-    width: "100%",
     height: 1,
     backgroundColor: "#ccc",
     marginTop: 20,
-  },
-  chatWrapper: {
-    flex: 1,
-    paddingHorizontal: 20,
+    alignSelf: "stretch",
+    marginBottom: 10,
   },
   chatContainer: {
     flex: 1,
     justifyContent: "flex-end",
-    marginBottom: 10
+    marginBottom: 10,
   },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 20,
+    paddingHorizontal: 20,
   },
   input: {
     flex: 1,
@@ -303,7 +307,7 @@ const styles = StyleSheet.create({
     ...defaultShadow,
     padding: 10,
     marginVertical: 10,
-    borderRadius: 8,
+    borderRadius: 15,
     maxWidth: "80%",
   },
   botBubble: {
@@ -312,7 +316,7 @@ const styles = StyleSheet.create({
     ...defaultShadow,
     padding: 10,
     marginVertical: 10,
-    borderRadius: 8,
+    borderRadius: 15,
     maxWidth: "80%",
   },
   messageText: {
@@ -324,19 +328,20 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   flatListContent: {
-    paddingBottom: 10
+    paddingBottom: 10,
+    paddingHorizontal: 20
   },
   xIcon: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    alignItems: "center"
+    position: "absolute",
+    top: 10,
+    right: 15,
+    zIndex: 20,
   },
   menuIcon: {
     position: "absolute",
     top: 10,
-    left: 10,
+    left: 15,
     zIndex: 20,
-    marginRight: 8,
   },
   historyOverlay: {
     position: "absolute",
@@ -358,7 +363,7 @@ const styles = StyleSheet.create({
     fontWeight: 500,
     fontSize: 16,
     marginBottom: 10,
-    marginTop: 20
+    marginTop: 30
   },
   sessionItem: {
     paddingVertical: 12,
@@ -366,6 +371,12 @@ const styles = StyleSheet.create({
   },
   sessionText: {
     fontWeight: 500
+  },
+  contentContainer: {
+    flexGrow: 1,
+    justifyContent: "flex-end",
+    paddingBottom: 20,
+    paddingHorizontal: 20
   }
 });
 
