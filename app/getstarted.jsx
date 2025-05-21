@@ -1,6 +1,6 @@
 import { View, Text, Image, StyleSheet, Pressable, ImageBackground } from "react-native";
 import backgroundImage from '../assets/images/Violet.png';
-import MyButton from "./components/Button";
+import MyButton from "../components/Button";
 import { useRouter } from "expo-router";
 
 export default function AvatarScreen() {

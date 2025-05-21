@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { OPENAI_API_KEY } from "@env";
-import { View, TextInput, Button, FlatList, Text, StyleSheet, KeyboardAvoidingView, Platform, SafeAreaView, Image, ImageBackground, Pressable, TouchableOpacity } from "react-native";
+import { View, TextInput, FlatList, Text, StyleSheet, KeyboardAvoidingView, Platform, SafeAreaView, Image, ImageBackground, Pressable, TouchableOpacity } from "react-native";
 import { getAuth } from "firebase/auth";
 import { saveMessage } from "../utils/saveMessage";
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import backgroundImage from "../assets/images/Violet.png";
-import { defaultShadow } from "../styles/shadows";
+import { defaultShadow, navShadow } from "../styles/shadows";
 import Feather from "@expo/vector-icons/Feather";
 import { getUserProfile } from "../utils/getUserProfile";
 import { buildPrompt } from "../utils/buildPrompt";
@@ -82,16 +82,6 @@ export default function Chat() {
     return () => unsubscribe();
   }, [user]);
 
-  if (!user) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.loginText}>
-          Please sign in to your account!
-        </Text>
-        <Button title="Sign in" onPress={() => router.push("/login")} />
-      </View>
-    );
-  }
   const uniqueId = () =>
     `${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
 
@@ -197,7 +187,9 @@ export default function Chat() {
                 placeholder="Write a message"
                 multiline
               />
-              <Button title="Send" onPress={sendMessage} />
+              <Pressable onPress={sendMessage}>
+                <Feather name="arrow-up-circle" size={24} color="black" />
+              </Pressable>
             </View>
           </SafeAreaView>
         </KeyboardAvoidingView>
@@ -254,7 +246,6 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingTop: 10,
-    paddingHorizontal: 10,
     zIndex: 1,
     width: "100%"
   },
@@ -289,8 +280,11 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 20,
-    paddingHorizontal: 20,
+    padding: 20,
+    ...navShadow,
+    backgroundColor: "#FAFAFA",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20
   },
   input: {
     flex: 1,
@@ -377,6 +371,6 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     paddingBottom: 20,
     paddingHorizontal: 20
-  }
+  },
 });
 

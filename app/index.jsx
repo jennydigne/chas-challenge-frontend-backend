@@ -1,8 +1,8 @@
 import { View, Image, StyleSheet, ImageBackground, Button, Text } from "react-native";
 import backgroundImage from '../assets/images/Violet_2.png';
-import MyButton from "./components/Button";
+import MyButton from "../components/Button";
 import { useRouter } from "expo-router";
-import Divider from "./components/Divider";
+import Divider from "../components/Divider";
 
 export default function HomeScreen() {
   const router = useRouter();
