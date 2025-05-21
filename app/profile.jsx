@@ -166,12 +166,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     width: "100%",
-    borderRadius: 20,
     paddingVertical: 15,
     backgroundColor: "#FAFAFA",
     ...navShadow,
     zIndex: 1,
     position: "relative",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20
   },
   navItem: {
     alignItems: "center",
