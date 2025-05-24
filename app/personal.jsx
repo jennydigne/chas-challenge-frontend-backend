@@ -1,23 +1,37 @@
-import { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, Pressable, ImageBackground, Alert } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  Pressable,
+  ImageBackground,
+  Alert,
+} from "react-native";
+import { useRouter } from "expo-router";
 import Feather from "@expo/vector-icons/Feather";
 import MyButton from "./components/Button";
-import ProgressBar from './components/ProgressBar';
-import backgroundImage from '../assets/images/Violet.png';
+import ProgressBar from "./components/ProgressBar";
+import backgroundImage from "../assets/images/Violet.png";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import { getAuth } from "firebase/auth";
-import BirthdatePicker from './components/BirthDatePicker';
+import BirthdatePicker from "./components/BirthDatePicker";
 
 export default function Personal() {
   const router = useRouter();
-  const [name, setName] = useState('');
-  const [username, setUsername] = useState('');
+  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
   const [birthDate, setbirthDate] = useState("");
   const [gender, setGender] = useState("");
+  const [customGender, setCustomGender] = useState("");
 
-  const isFormValid = name.trim() !== "" && username.trim() !== "" && gender !== "" && birthDate !== "";
+  const isFormValid =
+    name.trim() !== "" &&
+    username.trim() !== "" &&
+    gender !== "" &&
+    birthDate !== "";
+  gender !== "Other" || customGender.trim() !== "";
 
   const saveProfileData = async () => {
     if (!isFormValid) {
@@ -35,12 +49,17 @@ export default function Personal() {
 
     try {
       const personalDocRef = doc(db, "profiles", user.uid, "personal", "data");
-      await setDoc(personalDocRef, {
-        name,
-        username,
-        birthDate,
-        gender,
-      }, { merge: true });
+      await setDoc(
+        personalDocRef,
+        {
+          name,
+          username,
+          birthDate,
+          gender,
+          gender: gender === "Other" ? customGender : gender,
+        },
+        { merge: true }
+      );
 
       router.push("/getstarted");
     } catch (error) {
@@ -66,7 +85,7 @@ export default function Personal() {
         <TextInput
           style={styles.input}
           placeholder="John Doe"
-          placeholderTextColor={'#aaa'}
+          placeholderTextColor={"#aaa"}
           value={name}
           onChangeText={setName}
         />
@@ -75,7 +94,7 @@ export default function Personal() {
         <TextInput
           style={styles.input}
           placeholder="your_username"
-          placeholderTextColor={'#aaa'}
+          placeholderTextColor={"#aaa"}
           value={username}
           onChangeText={setUsername}
         />
@@ -85,25 +104,36 @@ export default function Personal() {
         </View>
         <Text style={styles.label}>Gender</Text>
         <View style={styles.genderContainer}>
-          {['Male', 'Female', 'Other'].map((option) => (
+          {["Male", "Female", "Other"].map((option) => (
             <Pressable
               key={option}
               onPress={() => setGender(option)}
               style={[
                 styles.genderButton,
-                gender === option && styles.genderButtonSelected
+                gender === option && styles.genderButtonSelected,
               ]}
             >
-              <View style={[
-                styles.radioOuter,
-                gender === option && styles.radioOuterSelected
-              ]}>
+              <View
+                style={[
+                  styles.radioOuter,
+                  gender === option && styles.radioOuterSelected,
+                ]}
+              >
                 {gender === option && <View style={styles.radioInner} />}
               </View>
               <Text style={styles.genderText}>{option}</Text>
             </Pressable>
           ))}
         </View>
+        {gender === "Other" && (
+          <TextInput
+            style={styles.input}
+            placeholder="Please specify"
+            placeholderTextColor="#aaa"
+            value={customGender}
+            onChangeText={setCustomGender}
+          />
+        )}
         <MyButton
           title="Continue"
           onPress={saveProfileData}
@@ -117,7 +147,7 @@ export default function Personal() {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    resizeMode: "cover"
+    resizeMode: "cover",
   },
   container: {
     flex: 1,
@@ -149,39 +179,38 @@ const styles = StyleSheet.create({
   },
   progress: {
     marginLeft: 20,
-    flex: 1
+    flex: 1,
   },
   genderContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 20,
     marginBottom: 30,
-    alignItems: 'center',
+    alignItems: "center",
   },
   genderButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   radioOuter: {
     width: 20,
     height: 20,
     borderRadius: 10,
     borderWidth: 2,
-    borderColor: '#693ED6',
-    justifyContent: 'center',
-    alignItems: 'center',
+    borderColor: "#693ED6",
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: 8,
   },
   radioOuterSelected: {
-    borderColor: '#693ED6',
+    borderColor: "#693ED6",
   },
   radioInner: {
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: '#693ED6',
+    backgroundColor: "#693ED6",
   },
   genderText: {
     fontSize: 16,
   },
 });
-

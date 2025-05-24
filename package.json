@@ -40,6 +40,7 @@
     "metro-config": "^0.82.3",
     "react": "19.0.0",
     "react-native": "0.79.2",
+    "react-native-calendars": "^1.1312.0",
     "react-native-dotenv": "^3.4.11",
     "react-native-gesture-handler": "~2.24.0",
     "react-native-modal-datetime-picker": "^18.0.0",

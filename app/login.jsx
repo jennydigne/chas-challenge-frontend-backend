@@ -100,7 +100,7 @@ export default function LoginScreen() {
               style={{ fontWeight: "bold" }}
             >
               {" "}
-              Singn up
+              Sign up
             </Text>
           </Text>
         </View>

@@ -1,5 +1,12 @@
-import { View, Image, StyleSheet, ImageBackground, Button, Text } from "react-native";
-import backgroundImage from '../assets/images/Violet_2.png';
+import {
+  View,
+  Image,
+  StyleSheet,
+  ImageBackground,
+  Button,
+  Text,
+} from "react-native";
+import backgroundImage from "../assets/images/Violet_2.png";
 import MyButton from "./components/Button";
 import { useRouter } from "expo-router";
 import Divider from "./components/Divider";
@@ -8,9 +15,14 @@ export default function HomeScreen() {
   const router = useRouter();
 
   return (
-    <ImageBackground source={backgroundImage} style={styles.container} resizeMode="cover">
+    <ImageBackground
+      source={backgroundImage}
+      style={styles.container}
+      resizeMode="cover"
+    >
       <View style={styles.content}>
-        <Image style={styles.image}
+        <Image
+          style={styles.image}
           source={require("../assets/images/LogoText.png")}
         />
         <View>
@@ -27,11 +39,18 @@ export default function HomeScreen() {
         {/* Testlänkar */}
         <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
           <Button title="chat" onPress={() => router.push("/chat")} />
-          <Button title="get started" onPress={() => router.push("/getstarted")} />
+          <Button
+            title="get started"
+            onPress={() => router.push("/getstarted")}
+          />
           <Button title="profile" onPress={() => router.push("/profile")} />
-          <Button title="chat-options" onPress={() => router.push("/chat-options")} />
+          <Button
+            title="chat-options"
+            onPress={() => router.push("/chat-options")}
+          />
           <Button title="verify" onPress={() => router.push("/verify")} />
           <Button title="personal" onPress={() => router.push("/personal")} />
+          <Button title="calender" onPress={() => router.push("/calender")} />
         </View>
       </View>
     </ImageBackground>
@@ -53,7 +72,6 @@ const styles = StyleSheet.create({
   image: {
     width: 195,
     height: 50.9,
-    marginBottom: 60
+    marginBottom: 60,
   },
 });
-
