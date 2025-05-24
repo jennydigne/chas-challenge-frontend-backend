@@ -1,7 +1,7 @@
 //Hämtar användarens färdiga profil från databasen
 
 import { doc, getDoc } from "firebase/firestore";
-import { db } from "./firebaseConfig";
+import { db } from "./firebase.config";
 
 export const getUserProfile = async (uid) => {
   try {

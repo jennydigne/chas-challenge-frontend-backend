@@ -1,10 +1,24 @@
 import { useState, useEffect } from "react";
 import { OPENAI_API_KEY } from "@env";
-import { View, TextInput, Button, FlatList, Text, StyleSheet, KeyboardAvoidingView, Platform, SafeAreaView, Image, ImageBackground, Pressable, TouchableOpacity } from "react-native";
+import {
+  View,
+  TextInput,
+  Button,
+  FlatList,
+  Text,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  Image,
+  ImageBackground,
+  Pressable,
+  TouchableOpacity,
+} from "react-native";
 import { getAuth } from "firebase/auth";
 import { saveMessage } from "../saveMessage";
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
-import { db } from "../firebaseConfig";
+import { db } from "../firebase.config";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import backgroundImage from "../assets/images/Violet.png";
 import { defaultShadow } from "../styles/shadows";
@@ -83,9 +97,7 @@ export default function Chat() {
   if (!user) {
     return (
       <View style={styles.container}>
-        <Text style={styles.loginText}>
-          Please sign in to your account!
-        </Text>
+        <Text style={styles.loginText}>Please sign in to your account!</Text>
         <Button title="Sign in" onPress={() => router.push("/login")} />
       </View>
     );
@@ -226,7 +238,9 @@ export default function Chat() {
                   }}
                   style={styles.sessionItem}
                 >
-                  <Text style={styles.sessionText} numberOfLines={1}>{item.text}</Text>
+                  <Text style={styles.sessionText} numberOfLines={1}>
+                    {item.text}
+                  </Text>
                 </TouchableOpacity>
               )}
             />
@@ -249,7 +263,7 @@ const styles = StyleSheet.create({
   },
   background: {
     flex: 1,
-    resizeMode: "cover"
+    resizeMode: "cover",
   },
   header: {
     paddingTop: 10,
@@ -285,7 +299,7 @@ const styles = StyleSheet.create({
   chatContainer: {
     flex: 1,
     justifyContent: "flex-end",
-    marginBottom: 10
+    marginBottom: 10,
   },
   inputContainer: {
     flexDirection: "row",
@@ -299,7 +313,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 10,
     marginRight: 6,
-    textAlignVertical: "top"
+    textAlignVertical: "top",
   },
   userBubble: {
     alignSelf: "flex-end",
@@ -325,15 +339,15 @@ const styles = StyleSheet.create({
   loginText: {
     marginTop: 40,
     fontSize: 18,
-    textAlign: "center"
+    textAlign: "center",
   },
   flatListContent: {
-    paddingBottom: 10
+    paddingBottom: 10,
   },
   xIcon: {
     flexDirection: "row",
     justifyContent: "flex-end",
-    alignItems: "center"
+    alignItems: "center",
   },
   menuIcon: {
     position: "absolute",
@@ -362,14 +376,13 @@ const styles = StyleSheet.create({
     fontWeight: 500,
     fontSize: 16,
     marginBottom: 10,
-    marginTop: 20
+    marginTop: 20,
   },
   sessionItem: {
     paddingVertical: 12,
     paddingHorizontal: 10,
   },
   sessionText: {
-    fontWeight: 500
-  }
+    fontWeight: 500,
+  },
 });
-

@@ -1,11 +1,10 @@
 //Skapar eller uppdaterar användarens profil i databasen utifrån deras onboarding-svar
 
 import { collection, getDocs, setDoc, doc } from "firebase/firestore";
-import { db } from "./firebaseConfig";
+import { db } from "./firebase.config";
 
 export const generateProfileFromAnswers = async (uid) => {
   try {
-
     const answersRef = collection(db, "profiles", uid, "onboardingAnswers");
     const snapshot = await getDocs(answersRef);
 
@@ -31,11 +30,10 @@ export const generateProfileFromAnswers = async (uid) => {
     });
 
     const profileRef = doc(db, "profiles", uid);
-    await setDoc(profileRef, profile); 
+    await setDoc(profileRef, profile);
 
     console.log("Profile saved:", profile);
   } catch (error) {
     console.error("Profile could not be saved:", error);
   }
 };
-

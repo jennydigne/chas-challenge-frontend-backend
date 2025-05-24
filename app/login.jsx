@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import backgroundImage from "../assets/images/Violet.png";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import app from "../firebaseConfig";
+import app from "../firebase.config";
 import { router } from "expo-router";
 import { getBackgroundColorAsync } from "expo-system-ui";
 import { Image } from "react-native";

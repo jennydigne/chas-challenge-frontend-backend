@@ -14,7 +14,7 @@ import MyButton from "./components/Button";
 import ProgressBar from "./components/ProgressBar";
 import backgroundImage from "../assets/images/Violet.png";
 import { doc, setDoc } from "firebase/firestore";
-import { db } from "../firebaseConfig";
+import { db } from "../firebase.config";
 import { getAuth } from "firebase/auth";
 import BirthdatePicker from "./components/BirthDatePicker";
 
