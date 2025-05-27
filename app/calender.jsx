@@ -6,6 +6,7 @@ import {
   StyleSheet,
   ImageBackground,
   Image,
+  ScrollView,
 } from "react-native";
 import { Calendar } from "react-native-calendars";
 import backgroundImage from "../assets/images/Violet.png";
@@ -16,25 +17,27 @@ import smileImage from "../assets/images/smile.png";
 import happyImage from "../assets/images/happy.png";
 
 export default function MoodCalendar() {
-  // Store moods per date: { '2025-05-20': 'happy', ... }
   const [moods, setMoods] = useState({});
   const [selectedDate, setSelectedDate] = useState(null);
+  const [currentMonth, setCurrentMonth] = useState(new Date());
 
-  // Color for each mood
+  // NEW: Track which timeframe button is selected
+  const [selectedTimeframe, setSelectedTimeframe] = useState("Week");
+
   const moodColors = {
-    happy: "#a1e887",
-    slightlyHappy: "#c4e1a9",
-    neutral: "#cccccc",
-    slightlySad: "#f3c6b8",
-    sad: "#f28b82",
+    sad: "#F9C6C9",
+    slightlySad: "#FDF3A0",
+    neutral: "#D9D6F3",
+    slightlyHappy: "#C9E6F5",
+    happy: "#B8F2C9",
   };
 
-  // Mark dates with color based on moods
   const markedDates = {};
   Object.entries(moods).forEach(([date, mood]) => {
     markedDates[date] = {
       selected: true,
       selectedColor: moodColors[mood],
+      selectedTextColor: "#000",
     };
   });
 
@@ -44,8 +47,36 @@ export default function MoodCalendar() {
       style={{ flex: 1 }}
       resizeMode="cover"
     >
-      <View style={{ flex: 1, padding: 20 }}>
-        <Text style={styles.header}>Mood Tracker</Text>
+      <ScrollView contentContainerStyle={{ padding: 20, paddingBottom: 40 }}>
+        <Text style={styles.header}>Mood Track</Text>
+
+        <View style={styles.timeframeButtonsContainer}>
+          {["Today", "Week", "Month", "Yearly"].map((label) => {
+            const isSelected = selectedTimeframe === label;
+            return (
+              <TouchableOpacity
+                key={label}
+                style={[
+                  styles.timeframeButton,
+                  isSelected && styles.timeframeButtonSelected,
+                ]}
+                onPress={() => setSelectedTimeframe(label)}
+              >
+                <Text
+                  style={[
+                    styles.timeframeText,
+                    isSelected && styles.timeframeTextSelected,
+                  ]}
+                >
+                  {label}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+
+        <View style={styles.divider} />
+
         <View style={styles.moodImagesContainer}>
           <Image source={sadImage} style={styles.moodImage} />
           <Image source={bitSadImage} style={styles.moodImage} />
@@ -53,7 +84,12 @@ export default function MoodCalendar() {
           <Image source={smileImage} style={styles.moodImage} />
           <Image source={happyImage} style={styles.moodImage} />
         </View>
+
         <Calendar
+          current={currentMonth.toISOString().split("T")[0]}
+          onMonthChange={(month) => {
+            setCurrentMonth(new Date(month.year, month.month - 1));
+          }}
           onDayPress={(day) => setSelectedDate(day.dateString)}
           markedDates={{
             ...markedDates,
@@ -61,6 +97,21 @@ export default function MoodCalendar() {
               ? { [selectedDate]: { selected: true, selectedColor: "#87ceeb" } }
               : {}),
           }}
+          theme={{
+            backgroundColor: "transparent",
+            calendarBackground: "transparent",
+            textSectionTitleColor: "#999",
+            todayTextColor: "#6C63FF",
+            dayTextColor: "#333",
+            textDisabledColor: "#d9e1e8",
+            monthTextColor: "#2D2D2D",
+            arrowColor: "#6C63FF",
+            textDayFontWeight: "500",
+            textMonthFontWeight: "bold",
+            textDayFontSize: 16,
+            textMonthFontSize: 20,
+          }}
+          style={styles.calendar}
         />
 
         {selectedDate && (
@@ -98,50 +149,109 @@ export default function MoodCalendar() {
             </View>
           </View>
         )}
-      </View>
+      </ScrollView>
     </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  header: {
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 28,
+    marginBottom: 10,
+  },
+
+  monthHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  monthText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#333",
+    textTransform: "capitalize",
+  },
+  arrow: {
+    fontSize: 22,
+    paddingHorizontal: 10,
+  },
+  moodImagesContainer: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    marginBottom: 40,
+  },
+  moodImage: {
+    width: 50,
+    height: 50,
+  },
+  calendar: {
+    borderRadius: 12,
+    padding: 10,
+    elevation: 3,
+    shadowColor: "#B9A7FF",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    backgroundColor: "#fff",
+    marginBottom: 20,
+  },
   moodSelector: {
     marginTop: 20,
   },
   title: {
     fontSize: 18,
     marginBottom: 14,
+    fontWeight: "600",
   },
   buttonsContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
   },
   moodButton: {
-    paddingVertical: 12,
-    paddingHorizontal: 15,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
     borderRadius: 8,
     marginRight: 10,
     marginBottom: 10,
   },
   moodText: {
-    color: "white",
+    color: "black",
     fontWeight: "600",
     textTransform: "capitalize",
   },
-  header: {
-    textAlign: "center",
-    fontWeight: "bold",
-    fontSize: 28,
-    marginBottom: 20,
-  },
-  moodImagesContainer: {
+  timeframeButtonsContainer: {
     flexDirection: "row",
     justifyContent: "space-evenly",
-    marginBottom: 20,
+    marginTop: 10,
+    gap: 4,
   },
-
-  moodImage: {
-    width: 50,
-    height: 50,
-    marginHorizontal: 5,
+  timeframeButton: {
+    backgroundColor: "white",
+    paddingVertical: 6,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    borderColor: "#B9A7FF",
+    borderWidth: 1,
+  },
+  timeframeButtonSelected: {
+    backgroundColor: "#584DD9",
+    borderColor: "#6C63FF",
+  },
+  timeframeText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#333",
+  },
+  timeframeTextSelected: {
+    color: "white",
+  },
+  divider: {
+    height: 1,
+    backgroundColor: "#ccc",
+    marginVertical: 16,
+    width: "100%",
   },
 });

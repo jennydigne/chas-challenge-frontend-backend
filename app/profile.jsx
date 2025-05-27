@@ -76,26 +76,34 @@ export default function Profile() {
 
       <View style={styles.content}>
         <View style={styles.row}>
-          <View style={styles.card}>
+          <TouchableOpacity
+            style={styles.card}
+            onPress={() => router.push("/check-in")}
+          >
             <Image
               source={require("../assets/images/checkin.png")}
               style={styles.cardImage}
             />
             <Text style={styles.cardText}>Check in</Text>
-          </View>
-          <View style={styles.card}>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.card}
+            onPress={() => router.push("/calender")}
+          >
             <Image
               source={require("../assets/images/moodtrack.png")}
               style={styles.cardImage}
             />
             <Text style={styles.cardText}>Mood track</Text>
-          </View>
+          </TouchableOpacity>
         </View>
         <View style={styles.row}>
           <View style={styles.card}>
             <Image
               source={require("../assets/images/saved.png")}
               style={styles.cardImage}
+              title="calender"
+              onPress={() => router.push("/calender")}
             />
             <Text style={styles.cardText}>Saved</Text>
           </View>
@@ -133,7 +141,7 @@ export default function Profile() {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.navItem}
-          onPress={() => router.push("/profile")}
+          onPress={() => router.push("/chat")}
         >
           <Octicons name="person-fill" size={20} color="#2D2D2D" />
           <Text style={styles.navText}>Profile</Text>

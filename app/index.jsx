@@ -39,10 +39,7 @@ export default function HomeScreen() {
         {/* Testlänkar */}
         <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
           <Button title="chat" onPress={() => router.push("/chat")} />
-          <Button
-            title="get started"
-            onPress={() => router.push("/getstarted")}
-          />
+          {/* 
           <Button title="profile" onPress={() => router.push("/profile")} />
           <Button
             title="chat-options"
@@ -50,7 +47,7 @@ export default function HomeScreen() {
           />
           <Button title="verify" onPress={() => router.push("/verify")} />
           <Button title="personal" onPress={() => router.push("/personal")} />
-          <Button title="calender" onPress={() => router.push("/calender")} />
+          <Button title="calender" onPress={() => router.push("/calender")} /> */}
         </View>
       </View>
     </ImageBackground>
