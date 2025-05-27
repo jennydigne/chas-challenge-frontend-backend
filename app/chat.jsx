@@ -3,7 +3,6 @@ import { OPENAI_API_KEY } from "@env";
 import {
   View,
   TextInput,
-  Button,
   FlatList,
   Text,
   StyleSheet,
@@ -16,13 +15,15 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { getAuth } from "firebase/auth";
-import { saveMessage } from "../saveMessage";
+import { saveMessage } from "../utils/saveMessage";
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
 import { db } from "../firebase.config";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import backgroundImage from "../assets/images/Violet.png";
-import { defaultShadow } from "../styles/shadows";
+import { defaultShadow, navShadow } from "../styles/shadows";
 import Feather from "@expo/vector-icons/Feather";
+import { getUserProfile } from "../utils/getUserProfile";
+import { buildPrompt } from "../utils/buildPrompt";
 
 export default function Chat() {
   const [messages, setMessages] = useState([]);
@@ -94,14 +95,6 @@ export default function Chat() {
     return () => unsubscribe();
   }, [user]);
 
-  if (!user) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.loginText}>Please sign in to your account!</Text>
-        <Button title="Sign in" onPress={() => router.push("/login")} />
-      </View>
-    );
-  }
   const uniqueId = () =>
     `${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
 
@@ -118,7 +111,13 @@ export default function Chat() {
     setInput("");
 
     await saveMessage(user.uid, text, "user", sessionId);
+
     try {
+      const profile = await getUserProfile(user.uid);
+
+      const promptMessages = buildPrompt(profile || {}, text);
+      console.log("Prompt sent to OpenAI:", promptMessages);
+
       const response = await fetch(
         "https://api.openai.com/v1/chat/completions",
         {
@@ -128,25 +127,17 @@ export default function Chat() {
             Authorization: `Bearer ${OPENAI_API_KEY}`,
           },
           body: JSON.stringify({
-            // model: "gpt-4o",
             model: "gpt-3.5-turbo",
-            messages: [
-              {
-                role: "system",
-                content: `You are NEU, a compassionate and attentive support assistant designed to help users with emotional well-being and mental health. 
-                          You respond in English and always prioritize empathy, active listening, and safety.`,
-              },
-              {
-                role: "user",
-                content: text,
-              },
-            ],
+            // model: "gpt-4o",
+            messages: promptMessages,
             temperature: 0.7,
           }),
         }
       );
+
       const data = await response.json();
       console.log(data);
+
       const botText =
         data.choices?.[0]?.message?.content || "No response from NEU.";
       const botMessage = {
@@ -155,8 +146,8 @@ export default function Chat() {
         sender: "bot",
         sessionId,
       };
-      setMessages((prev) => [botMessage, ...prev]);
 
+      setMessages((prev) => [botMessage, ...prev]);
       await saveMessage(user.uid, botText, "bot", sessionId);
     } catch (error) {
       console.error("API error:", error);
@@ -166,29 +157,12 @@ export default function Chat() {
   return (
     <ImageBackground source={backgroundImage} style={styles.background}>
       <View style={styles.container}>
-        <View style={styles.header}>
-          <View style={styles.xIcon}>
-            <Pressable onPress={() => router.push("/profile")}>
-              <Feather name="x" size={24} color="black" />
-            </Pressable>
-          </View>
-          <View style={styles.centered}>
-            <Image
-              source={require("../assets/images/purple-ellipse.png")}
-              style={styles.avatar}
-            />
-            <Text style={styles.name}>
-              {"Hello I'm NEU, your personal AI,\nwhat can I do for you today?"}
-            </Text>
-          </View>
-          <View style={styles.hr} />
-        </View>
         <KeyboardAvoidingView
-          style={styles.chatWrapper}
+          style={styles.container}
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0}
         >
-          <SafeAreaView style={{ flex: 1 }}>
+          <SafeAreaView style={styles.container}>
             <View style={styles.chatContainer}>
               <FlatList
                 data={messages}
@@ -205,7 +179,23 @@ export default function Chat() {
                   </View>
                 )}
                 inverted
-                contentContainerStyle={styles.flatListContent}
+                ListFooterComponent={
+                  <View style={styles.header}>
+                    <View style={styles.centered}>
+                      <Image
+                        source={require("../assets/images/purple-ellipse.png")}
+                        style={styles.avatar}
+                      />
+                      <Text style={styles.name}>
+                        {
+                          "Hello I'm NEU, your personal AI,\nwhat can I do for you today?"
+                        }
+                      </Text>
+                    </View>
+                    <View style={styles.hr} />
+                  </View>
+                }
+                contentContainerStyle={styles.contentContainer}
               />
             </View>
             <View style={styles.inputContainer}>
@@ -216,11 +206,14 @@ export default function Chat() {
                 placeholder="Write a message"
                 multiline
               />
-              <Button title="Send" onPress={sendMessage} />
+              <Pressable onPress={sendMessage}>
+                <Feather name="arrow-up-circle" size={24} color="black" />
+              </Pressable>
             </View>
           </SafeAreaView>
         </KeyboardAvoidingView>
       </View>
+
       {showHistory && (
         <View style={styles.historyOverlay}>
           <View style={styles.historyPanel}>
@@ -251,8 +244,13 @@ export default function Chat() {
         style={styles.menuIcon}
         onPress={() => setShowHistory((prev) => !prev)}
       >
-        <Feather name="menu" size={20} color="black" />
+        <Feather name="menu" size={24} color="black" />
       </TouchableOpacity>
+      <View style={styles.xIcon}>
+        <Pressable onPress={() => router.push("/profile")}>
+          <Feather name="x" size={24} color="black" />
+        </Pressable>
+      </View>
     </ImageBackground>
   );
 }
@@ -267,8 +265,8 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingTop: 10,
-    paddingHorizontal: 10,
     zIndex: 1,
+    width: "100%",
   },
   centered: {
     justifyContent: "flex-start",
@@ -287,14 +285,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   hr: {
-    width: "100%",
     height: 1,
     backgroundColor: "#ccc",
     marginTop: 20,
-  },
-  chatWrapper: {
-    flex: 1,
-    paddingHorizontal: 20,
+    alignSelf: "stretch",
+    marginBottom: 10,
   },
   chatContainer: {
     flex: 1,
@@ -304,7 +299,11 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 60,
+    padding: 20,
+    ...navShadow,
+    backgroundColor: "#FAFAFA",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
   },
   input: {
     flex: 1,
@@ -321,7 +320,7 @@ const styles = StyleSheet.create({
     ...defaultShadow,
     padding: 10,
     marginVertical: 10,
-    borderRadius: 8,
+    borderRadius: 15,
     maxWidth: "80%",
   },
   botBubble: {
@@ -330,7 +329,7 @@ const styles = StyleSheet.create({
     ...defaultShadow,
     padding: 10,
     marginVertical: 10,
-    borderRadius: 8,
+    borderRadius: 15,
     maxWidth: "80%",
   },
   messageText: {
@@ -343,18 +342,19 @@ const styles = StyleSheet.create({
   },
   flatListContent: {
     paddingBottom: 10,
+    paddingHorizontal: 20,
   },
   xIcon: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    alignItems: "center",
+    position: "absolute",
+    top: 10,
+    right: 15,
+    zIndex: 20,
   },
   menuIcon: {
     position: "absolute",
     top: 10,
-    left: 10,
+    left: 15,
     zIndex: 20,
-    marginRight: 8,
   },
   historyOverlay: {
     position: "absolute",
@@ -376,7 +376,7 @@ const styles = StyleSheet.create({
     fontWeight: 500,
     fontSize: 16,
     marginBottom: 10,
-    marginTop: 20,
+    marginTop: 30,
   },
   sessionItem: {
     paddingVertical: 12,
@@ -384,5 +384,11 @@ const styles = StyleSheet.create({
   },
   sessionText: {
     fontWeight: 500,
+  },
+  contentContainer: {
+    flexGrow: 1,
+    justifyContent: "flex-end",
+    paddingBottom: 20,
+    paddingHorizontal: 20,
   },
 });

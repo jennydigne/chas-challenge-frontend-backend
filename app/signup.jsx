@@ -14,13 +14,13 @@ import {
   ImageBackground,
 } from "react-native";
 import backgroundImage from "../assets/images/Violet_2.png";
-import MyButton from "./components/Button";
+import MyButton from "../components/Button";
 import { useRouter } from "expo-router";
-import Divider from "./components/Divider";
+import Divider from "../components/Divider";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase.config";
+import { auth } from "../firebaseConfig";
 import Feather from "@expo/vector-icons/Feather";
-import ProgressBar from "./components/ProgressBar";
+import ProgressBar from "../components/ProgressBar";
 
 export default function SignUp() {
   const router = useRouter();

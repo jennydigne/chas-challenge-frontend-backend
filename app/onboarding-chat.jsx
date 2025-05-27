@@ -11,18 +11,18 @@ import {
   ImageBackground,
   TouchableOpacity,
   ScrollView,
-  Button,
   Pressable,
 } from "react-native";
 import { getAuth } from "firebase/auth";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { db } from "../firebase.config";
+import { db } from "../firebaseConfig";
 import { useRouter } from "expo-router";
 import backgroundImage from "../assets/images/Violet.png";
-import MyButton from "./components/Button";
-import { generateProfileFromAnswers } from "../generateUserProfile";
-import { defaultShadow } from "../styles/shadows";
+import MyButton from "../components/Button";
+import { generateProfileFromAnswers } from "../utils/generateUserProfile";
+import { navShadow } from "../styles/shadows";
 import Feather from "@expo/vector-icons/Feather";
+import ChatBubble from "../components/ChatBubble";
 
 export default function OnboardingChat() {
   const [messages, setMessages] = useState([]);
@@ -170,15 +170,6 @@ export default function OnboardingChat() {
     }
   };
 
-  if (!user) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.loginText}>Please sign in to your account!</Text>
-        <MyButton title="Sign in" onPress={() => router.push("/login")} />
-      </View>
-    );
-  }
-
   const currentOptions = onboardingQuestions[onboardingStep]?.options || [];
 
   return (
@@ -189,100 +180,101 @@ export default function OnboardingChat() {
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0}
         >
-          <ScrollView
-            ref={scrollViewRef}
-            contentContainerStyle={styles.contentContainer}
-            keyboardShouldPersistTaps="handled"
-            onScroll={(e) => {
-              const { contentOffset, layoutMeasurement, contentSize } =
-                e.nativeEvent;
-              const paddingToBottom = 20;
-              const atBottom =
-                contentOffset.y + layoutMeasurement.height >=
-                contentSize.height - paddingToBottom;
-              setIsAtBottom(atBottom);
-            }}
-            scrollEventThrottle={100}
-          >
-            <View style={styles.header}>
-              <Pressable onPress={() => router.push("/getstarted")}>
-                <Feather name="chevron-left" size={30} color="black" />
-              </Pressable>
-              <View style={styles.centered}>
-                <Image
-                  source={require("../assets/images/purple-ellipse.png")}
-                  style={styles.avatar}
-                />
-                <Text style={styles.name}>
-                  {
-                    "Hello I'm NEU, your personal AI,\nwhat can I do for you today?"
-                  }
-                </Text>
-              </View>
-              <View style={styles.hr} />
-            </View>
-            <View style={styles.chatWrapper}>
-              {[...messages].reverse().map((item) => (
-                <View
-                  key={item.id}
-                  style={
-                    item.sender === "user"
-                      ? styles.userBubble
-                      : styles.botBubble
-                  }
-                >
-                  <Text style={styles.messageText}>{item.text}</Text>
+          <View style={styles.container}>
+            <ScrollView
+              ref={scrollViewRef}
+              contentContainerStyle={styles.contentContainer}
+              keyboardShouldPersistTaps="handled"
+              onScroll={(e) => {
+                const { contentOffset, layoutMeasurement, contentSize } =
+                  e.nativeEvent;
+                const paddingToBottom = 20;
+                const atBottom =
+                  contentOffset.y + layoutMeasurement.height >=
+                  contentSize.height - paddingToBottom;
+                setIsAtBottom(atBottom);
+              }}
+              scrollEventThrottle={100}
+            >
+              <View style={styles.header}>
+                <View style={styles.centered}>
+                  <Image
+                    source={require("../assets/images/purple-ellipse.png")}
+                    style={styles.avatar}
+                  />
+                  <Text style={styles.name}>
+                    {
+                      "Hello I'm NEU, your personal AI,\nwhat can I do for you today?"
+                    }
+                  </Text>
                 </View>
-              ))}
+                <View style={styles.hr} />
+              </View>
+
+              <View style={styles.chatWrapper}>
+                {[...messages].reverse().map((item) => (
+                  <ChatBubble
+                    key={item.id}
+                    text={item.text}
+                    sender={item.sender}
+                  />
+                ))}
+              </View>
 
               {!showProfileButton && (
-                <>
-                  <View style={styles.optionContainer}>
-                    {currentOptions.map((option) => {
-                      const selected = selectedOptions.includes(option);
-                      return (
-                        <TouchableOpacity
-                          key={option}
+                <View style={styles.optionContainer}>
+                  {currentOptions.map((option) => {
+                    const selected = selectedOptions.includes(option);
+                    return (
+                      <TouchableOpacity
+                        key={option}
+                        style={[
+                          styles.optionButton,
+                          selected && styles.optionButtonSelected,
+                        ]}
+                        onPress={() => toggleOption(option)}
+                      >
+                        <Text
                           style={[
-                            styles.optionButton,
-                            selected && styles.optionButtonSelected,
+                            styles.optionText,
+                            selected && styles.optionTextSelected,
                           ]}
-                          onPress={() => toggleOption(option)}
                         >
-                          <Text
-                            style={[
-                              styles.optionText,
-                              selected && styles.optionTextSelected,
-                            ]}
-                          >
-                            {option}
-                          </Text>
-                        </TouchableOpacity>
-                      );
-                    })}
-                  </View>
-                  <View style={styles.inputContainer}>
-                    <TextInput
-                      style={styles.input}
-                      value={input}
-                      onChangeText={setInput}
-                      placeholder="Write your answer"
-                      multiline
-                    />
-                    <Button title="Send" onPress={sendMessage} />
-                  </View>
-                </>
+                          {option}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
               )}
+
               {showProfileButton && (
                 <View style={styles.buttonContainer}>
                   <MyButton
                     title="Go to profile"
-                    onPress={() => router.push("/profile")}
+                    onPress={() => router.replace("/profile")}
                   />
                 </View>
               )}
-            </View>
-          </ScrollView>
+            </ScrollView>
+
+            {!showProfileButton && (
+              <View style={styles.fixedInputWrapper}>
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={styles.input}
+                    value={input}
+                    onChangeText={setInput}
+                    placeholder="Write your answer"
+                    multiline
+                  />
+                  <Pressable onPress={sendMessage}>
+                    <Feather name="arrow-up-circle" size={24} color="black" />
+                  </Pressable>
+                </View>
+              </View>
+            )}
+          </View>
         </KeyboardAvoidingView>
       </SafeAreaView>
     </ImageBackground>
@@ -298,7 +290,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    paddingTop: 10,
+    paddingTop: 50,
     paddingHorizontal: 10,
     zIndex: 1,
   },
@@ -332,7 +324,6 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 10,
   },
   input: {
     flex: 1,
@@ -341,27 +332,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 10,
     marginRight: 6,
-  },
-  userBubble: {
-    alignSelf: "flex-end",
-    backgroundColor: "#ECE9FB",
-    ...defaultShadow,
-    padding: 10,
-    marginVertical: 10,
-    borderRadius: 8,
-    maxWidth: "80%",
-  },
-  botBubble: {
-    alignSelf: "flex-start",
-    backgroundColor: "#FAFAFA",
-    ...defaultShadow,
-    padding: 10,
-    marginVertical: 20,
-    borderRadius: 8,
-    maxWidth: "80%",
-  },
-  messageText: {
-    fontSize: 16,
   },
   send: {
     backgroundColor: "#AFA1EE",
@@ -372,6 +342,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     marginBottom: 10,
+    paddingHorizontal: 20,
   },
   optionButton: {
     borderWidth: 1,
@@ -399,8 +370,16 @@ const styles = StyleSheet.create({
   buttonContainer: {
     marginVertical: 20,
     marginHorizontal: 80,
+    paddingBottom: 40,
   },
   contentContainer: {
     flexGrow: 1,
+  },
+  fixedInputWrapper: {
+    padding: 20,
+    backgroundColor: "#FAFAFA",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    ...navShadow,
   },
 });

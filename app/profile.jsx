@@ -11,7 +11,7 @@ import { useRouter } from "expo-router";
 import Feather from "@expo/vector-icons/Feather";
 import Octicons from "@expo/vector-icons/Octicons";
 import { defaultShadow, navShadow } from "../styles/shadows";
-import LogoutButton from "./components/LogoutButton";
+import LogoutButton from "../components/LogoutButton";
 import { useState, useEffect } from "react";
 import { getAuth } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
@@ -20,11 +20,13 @@ import { db } from "../firebase.config";
 export default function Profile() {
   const router = useRouter();
   const [name, setName] = useState("");
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const fetchName = async () => {
       const auth = getAuth();
       const user = auth.currentUser;
+      setUser(user);
 
       if (!user) return;
 
@@ -210,12 +212,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     width: "100%",
-    borderRadius: 20,
     paddingVertical: 15,
     backgroundColor: "#FAFAFA",
     ...navShadow,
     zIndex: 1,
     position: "relative",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
   },
   navItem: {
     alignItems: "center",

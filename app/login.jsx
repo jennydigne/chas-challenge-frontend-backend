@@ -16,7 +16,7 @@ import { getBackgroundColorAsync } from "expo-system-ui";
 import { Image } from "react-native";
 
 import { TouchableOpacity } from "react-native";
-import MyButton from "./components/Button";
+import MyButton from "../components/Button";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
