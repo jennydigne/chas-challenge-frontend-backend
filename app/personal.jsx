@@ -10,13 +10,13 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import Feather from "@expo/vector-icons/Feather";
-import MyButton from "./components/Button";
-import ProgressBar from "./components/ProgressBar";
+import MyButton from "../components/Button";
+import ProgressBar from "../components/ProgressBar";
 import backgroundImage from "../assets/images/Violet.png";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import { getAuth } from "firebase/auth";
-import BirthdatePicker from "./components/BirthDatePicker";
+import BirthdatePicker from "../components/BirthDatePicker";
 
 export default function Personal() {
   const router = useRouter();

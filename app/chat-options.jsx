@@ -1,6 +1,6 @@
 import backgroundImage from '../assets/images/Violet.png';
 import { useRouter } from "expo-router";
-import MyButton from "./components/Button";
+import MyButton from "../components/Button";
 import { StyleSheet, Image, ImageBackground, View, Pressable } from 'react-native';
 import Feather from '@expo/vector-icons/Feather';
 

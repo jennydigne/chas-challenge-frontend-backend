@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Pressable, ImageBackground, Button, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import Feather from "@expo/vector-icons/Feather";
-import ProgressBar from './components/ProgressBar';
+import ProgressBar from '../components/ProgressBar';
 import backgroundImage from '../assets/images/Violet.png';
 
 export default function VerifyScreen() {

@@ -4,20 +4,23 @@ import { useRouter } from "expo-router";
 import Feather from '@expo/vector-icons/Feather';
 import Octicons from '@expo/vector-icons/Octicons';
 import { defaultShadow, navShadow } from "../styles/shadows";
-import LogoutButton from "./components/LogoutButton";
+import LogoutButton from "../components/LogoutButton";
 import { useState, useEffect } from "react";
 import { getAuth } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
+import RequireLoginMessage from "../components/RequireLoginMessage";
 
 export default function Profile() {
   const router = useRouter();
   const [name, setName] = useState("");
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const fetchName = async () => {
       const auth = getAuth();
       const user = auth.currentUser;
+      setUser(user);
 
       if (!user) return;
 
@@ -40,11 +43,15 @@ export default function Profile() {
   }, []);
 
   const getGreeting = () => {
-  const hour = new Date().getHours();
-  if (hour < 12) return "Good morning";
-  if (hour < 18) return "Good afternoon";
-  return "Good evening";
-};
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good morning";
+    if (hour < 18) return "Good afternoon";
+    return "Good evening";
+  };
+
+  if (!user) {
+    return <RequireLoginMessage />;
+  }
 
   return (
     <ImageBackground source={backgroundImage} style={styles.container} resizeMode="cover">
@@ -58,7 +65,7 @@ export default function Profile() {
           source={require("../assets/images/purple-ellipse.png")}
           style={styles.avatar}
         />
-        <Text style={styles.text}>{getGreeting()} {name}!</Text>
+        <Text style={styles.greeting}>{getGreeting()} {name}!</Text>
       </View>
 
       <View style={styles.content}>
@@ -101,7 +108,6 @@ export default function Profile() {
           <Octicons name="person-fill" size={20} color="#2D2D2D" />
           <Text style={styles.navText}>Profile</Text>
         </TouchableOpacity>
-
       </View>
     </ImageBackground>
   );
@@ -166,12 +172,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     width: "100%",
-    borderRadius: 20,
     paddingVertical: 15,
     backgroundColor: "#FAFAFA",
     ...navShadow,
     zIndex: 1,
     position: "relative",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20
   },
   navItem: {
     alignItems: "center",
@@ -195,5 +202,10 @@ const styles = StyleSheet.create({
     height: 56,
     width: 56,
     marginBottom: 20
+  },
+  greeting: {
+    textAlign: "center",
+    fontSize: 26,
+    fontWeight: 600
   }
 });
