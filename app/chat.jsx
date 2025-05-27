@@ -1,10 +1,23 @@
 import { useState, useEffect } from "react";
 import { OPENAI_API_KEY } from "@env";
-import { View, TextInput, FlatList, Text, StyleSheet, KeyboardAvoidingView, Platform, SafeAreaView, Image, ImageBackground, Pressable, TouchableOpacity } from "react-native";
+import {
+  View,
+  TextInput,
+  FlatList,
+  Text,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  Image,
+  ImageBackground,
+  Pressable,
+  TouchableOpacity,
+} from "react-native";
 import { getAuth } from "firebase/auth";
 import { saveMessage } from "../utils/saveMessage";
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
-import { db } from "../firebaseConfig";
+import { db } from "../firebase.config";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import backgroundImage from "../assets/images/Violet.png";
 import { defaultShadow, navShadow } from "../styles/shadows";
@@ -105,24 +118,28 @@ export default function Chat() {
       const promptMessages = buildPrompt(profile || {}, text);
       console.log("Prompt sent to OpenAI:", promptMessages);
 
-      const response = await fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${OPENAI_API_KEY}`,
-        },
-        body: JSON.stringify({
-          model: "gpt-3.5-turbo",
-          // model: "gpt-4o",
-          messages: promptMessages,
-          temperature: 0.7,
-        }),
-      });
+      const response = await fetch(
+        "https://api.openai.com/v1/chat/completions",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${OPENAI_API_KEY}`,
+          },
+          body: JSON.stringify({
+            model: "gpt-3.5-turbo",
+            // model: "gpt-4o",
+            messages: promptMessages,
+            temperature: 0.7,
+          }),
+        }
+      );
 
       const data = await response.json();
       console.log(data);
 
-      const botText = data.choices?.[0]?.message?.content || "No response from NEU.";
+      const botText =
+        data.choices?.[0]?.message?.content || "No response from NEU.";
       const botMessage = {
         id: `bot_${uniqueId()}`,
         text: botText,
@@ -170,7 +187,9 @@ export default function Chat() {
                         style={styles.avatar}
                       />
                       <Text style={styles.name}>
-                        {"Hello I'm NEU, your personal AI,\nwhat can I do for you today?"}
+                        {
+                          "Hello I'm NEU, your personal AI,\nwhat can I do for you today?"
+                        }
                       </Text>
                     </View>
                     <View style={styles.hr} />
@@ -242,12 +261,12 @@ const styles = StyleSheet.create({
   },
   background: {
     flex: 1,
-    resizeMode: "cover"
+    resizeMode: "cover",
   },
   header: {
     paddingTop: 10,
     zIndex: 1,
-    width: "100%"
+    width: "100%",
   },
   centered: {
     justifyContent: "flex-start",
@@ -284,7 +303,7 @@ const styles = StyleSheet.create({
     ...navShadow,
     backgroundColor: "#FAFAFA",
     borderTopLeftRadius: 20,
-    borderTopRightRadius: 20
+    borderTopRightRadius: 20,
   },
   input: {
     flex: 1,
@@ -293,7 +312,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 10,
     marginRight: 6,
-    textAlignVertical: "top"
+    textAlignVertical: "top",
   },
   userBubble: {
     alignSelf: "flex-end",
@@ -319,11 +338,11 @@ const styles = StyleSheet.create({
   loginText: {
     marginTop: 40,
     fontSize: 18,
-    textAlign: "center"
+    textAlign: "center",
   },
   flatListContent: {
     paddingBottom: 10,
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   },
   xIcon: {
     position: "absolute",
@@ -357,20 +376,19 @@ const styles = StyleSheet.create({
     fontWeight: 500,
     fontSize: 16,
     marginBottom: 10,
-    marginTop: 30
+    marginTop: 30,
   },
   sessionItem: {
     paddingVertical: 12,
     paddingHorizontal: 10,
   },
   sessionText: {
-    fontWeight: 500
+    fontWeight: 500,
   },
   contentContainer: {
     flexGrow: 1,
     justifyContent: "flex-end",
     paddingBottom: 20,
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   },
 });
-
